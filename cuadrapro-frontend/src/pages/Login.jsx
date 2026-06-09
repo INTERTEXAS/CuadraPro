@@ -27,7 +27,9 @@ export default function Login() {
       } else if (err.response.status === 401) {
         setError('Las credenciales ingresadas no coinciden con nuestros registros.');
       } else {
-        setError(`Error inesperado (${err.response.status}): ${err.response.data?.error || 'Sin detalle'}. URL: ${import.meta.env.VITE_API_URL}`);
+        const errorMsg = err.response.data?.error || 'Sin detalle';
+        const errorDetalle = err.response.data?.detalle || 'No hay información adicional';
+        setError(`Error (${err.response.status}): ${errorMsg}. Detalle Técnico: ${errorDetalle}. URL API: ${import.meta.env.VITE_API_URL}`);
       }
     }
   };
