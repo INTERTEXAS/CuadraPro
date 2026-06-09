@@ -77,4 +77,37 @@ const resetAdmin = async (req, res) => {
   }
 };
 
-module.exports = { login, registrarUsuario, seedDemo, resetAdmin };
+const seedTransactions = async (req, res) => {
+  try {
+    // 1. Obtener todas las empresas
+    const { rows: empresas } = await db.query('SELECT id FROM empresas_clientes');
+    
+    console.log(`[SEED] Generando movimientos para ${empresas.length} empresas...`);
+    
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    
+    for (const emp of empresas) {
+      for (let i = 0; i < 7; i++) {
+        const esperado = Math.floor(Math.random() * (50000 - 10000) + 10000);
+        const depositado = esperado - (Math.random() * 500); // Pequeña diferencia para conciliación
+        const clip = esperado * 0.036;
+        const mp = esperado * 0.034;
+        const sat = esperado * 0.08;
+
+        await db.query(
+          `INSERT INTO flujos_financieros 
+          (empresa_id, fecha_corte, dia_semana, monto_esperado, monto_depositado, comision_clip, comision_mercadopago, retencion_sat) 
+          VALUES ($1, CURRENT_DATE - $2, $3, $4, $5, $6, $7, $8)`,
+          [emp.id, i, dias[i], esperado, depositado, clip, mp, sat]
+        );
+      }
+    }
+    
+    res.json({ mensaje: 'Movimientos financieros generados para todas las empresas.' });
+  } catch (error) {
+    console.error('ERROR SEED TRANS:', error);
+    res.status(500).json({ error: 'Error generando movimientos', detalle: error.message });
+  }
+};
+
+module.exports = { login, registrarUsuario, seedDemo, resetAdmin, seedTransactions };
