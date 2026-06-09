@@ -47,13 +47,15 @@ const login = async (req, res) => {
 };
 
 const registrarUsuario = async (req, res) => {
-  const { empresa_id, nombre_completo, email, password } = req.body;
+  const { nombre_completo, email, password } = req.body;
   try {
-    const query = 'INSERT INTO usuarios_boveda (empresa_id, nombre_completo, email, password_hash) VALUES ($1, $2, $3, $4)';
-    await db.query(query, [empresa_id, nombre_completo, email, password]);
+    // Usamos empresa_id = 1 por defecto si no existe, o simplemente lo insertamos
+    const query = 'INSERT INTO usuarios_boveda (empresa_id, nombre_completo, email, password_hash, rol) VALUES ($1, $2, $3, $4, $5)';
+    await db.query(query, [1, nombre_completo, email.trim().toLowerCase(), password.trim(), 'SuperAdmin']);
     res.status(201).json({ mensaje: 'Credenciales B2B creadas exitosamente.' });
   } catch (error) {
-    res.status(500).json({ error: 'Error de inyección B2B. Verifica la BD.' });
+    console.error('ERROR REGISTRO:', error);
+    res.status(500).json({ error: 'Error de inyección B2B.', detalle: error.message });
   }
 };
 
