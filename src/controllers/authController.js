@@ -97,7 +97,7 @@ const seedTransactions = async (req, res) => {
         await db.query(
           `INSERT INTO flujos_financieros 
           (empresa_id, fecha_corte, dia_semana, monto_esperado, monto_depositado, comision_clip, comision_mercadopago, retencion_sat) 
-          VALUES ($1, CURRENT_DATE - $2, $3, $4, $5, $6, $7, $8)`,
+          VALUES ($1, CURRENT_DATE - ($2 || ' day')::interval, $3, $4, $5, $6, $7, $8)`,
           [emp.id, i, dias[i], esperado, depositado, clip, mp, sat]
         );
       }
