@@ -1,5 +1,5 @@
 // ==========================================
-// CuadraPro - Dashboard Clean SaaS
+// CuadraPro - Dashboard Ultra-Premium (Framer Motion)
 // Firma: buhonero0
 // ==========================================
 import { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pi
 import { Wallet, TrendingDown, AlertTriangle, ArrowUpRight, ArrowDownRight, Download, Info, PlusCircle, Bell, ChevronDown, Calendar, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
+import { motion } from 'framer-motion';
 
 export default function Dashboard() {
   const [datos, setDatos] = useState(null);
@@ -20,14 +21,14 @@ export default function Dashboard() {
     const cargarDatos = async () => {
       try {
         const token = localStorage.getItem('tokenCuadraPro');
-        const respuesta = await axios.get('${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard', {
+        const respuesta = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setDatos(respuesta.data);
       } catch (error) {
         console.error('Error cargando métricas');
       } finally {
-        setTimeout(() => setCargando(false), 600);
+        setTimeout(() => setCargando(false), 400); // Carga rápida simulada
       }
     };
     cargarDatos();
@@ -50,6 +51,17 @@ export default function Dashboard() {
     { id: 'TRX-1090', fecha: 'Ayer, 18:45', tipo: 'Cobro Mercado Pago', monto: '+ $1,200.00', estatus: 'Pendiente' },
   ];
 
+  // Configuración de animaciones tipo "Emil Kowalski" (Springs precisos)
+  const springConfig = { type: "spring", stiffness: 300, damping: 30 };
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: springConfig }
+  };
+
   if (cargando) return (
     <div className="space-y-8 animate-pulse">
       <div className="flex justify-between items-end"><div className="space-y-2"><div className="h-8 w-64 bg-neutral-200 rounded"></div><div className="h-4 w-48 bg-neutral-100 rounded"></div></div><div className="h-10 w-32 bg-neutral-200 rounded-lg"></div></div>
@@ -59,63 +71,83 @@ export default function Dashboard() {
   );
 
   if (datos && datos.kpis.totalEsperado === 0) return (
-    <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-6">
+    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={springConfig} className="flex flex-col items-center justify-center h-[70vh] text-center space-y-6">
       <div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center text-neutral-400"><Wallet size={40} /></div>
       <div><h2 className="text-xl font-bold text-neutral-900">Sin actividad financiera</h2><p className="text-sm text-neutral-500 mt-1 max-w-sm">Registra tu primer ingreso para generar métricas de conciliación.</p></div>
       <button onClick={() => navigate('/captura')} className="px-6 py-2.5 bg-neutral-900 text-white rounded-lg text-sm font-bold hover:bg-black transition-all shadow-sm">Comenzar Captura</button>
-    </div>
+    </motion.div>
   );
 
   return (
-    <div className="space-y-8 animate-fade-in pb-10">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
       {toast && (
-        <div className="fixed bottom-6 right-6 bg-neutral-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 text-sm font-bold border border-neutral-800">
-          <Download size={16} className="text-b2bHighlight" /> Reporte generado exitosamente
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 50, scale: 0.9 }} 
+          animate={{ opacity: 1, y: 0, scale: 1 }} 
+          exit={{ opacity: 0, scale: 0.9 }} 
+          className="fixed bottom-6 right-6 bg-neutral-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 text-sm font-bold border border-neutral-800"
+        >
+          <Download size={16} className="text-b2bHighlight" /> Reporte Excel generado con éxito.
+        </motion.div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-             <div className="w-2 h-2 bg-b2bHighlight rounded-full"></div>
+             <div className="w-2 h-2 bg-b2bHighlight rounded-full shadow-[0_0_8px_rgba(0,196,159,0.8)]"></div>
              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">En Vivo • Bóveda Sincronizada</span>
           </div>
           <h2 className="text-2xl font-extrabold text-neutral-900 tracking-tight">Análisis de Conciliación</h2>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-neutral-600 rounded-lg text-xs font-bold hover:bg-neutral-50 transition-all shadow-sm">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-neutral-600 rounded-lg text-xs font-bold hover:bg-neutral-50 hover:border-neutral-300 transition-all shadow-sm">
             <Calendar size={14} /> Últimos 7 días <ChevronDown size={12} />
           </button>
-          <button onClick={exportarExcel} className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all shadow-md shadow-neutral-200">
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={exportarExcel} 
+            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all shadow-md shadow-neutral-200"
+          >
             <Download size={14} /> Exportar Reporte
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { label: 'Total Esperado', valor: `$${datos.kpis.totalEsperado.toLocaleString()}`, icon: <Wallet />, color: 'text-neutral-900', bg: 'bg-white' },
           { label: 'Fuga de Comisiones', valor: `$${datos.kpis.fugaDeducciones.toLocaleString()}`, icon: <ArrowDownRight />, color: 'text-red-600', bg: 'bg-white' },
           { label: 'Estado de Salud', valor: datos.kpis.estadoSalud, icon: <Activity />, color: datos.kpis.estadoSalud === 'Óptimo' ? 'text-b2bHighlight' : 'text-amber-500', bg: 'bg-white' }
         ].map((kpi, i) => (
-          <div key={i} className={`${kpi.bg} p-6 rounded-xl border border-neutral-200 shadow-sm hover:border-neutral-300 transition-all group`}>
+          <motion.div 
+            key={i} 
+            whileHover={{ y: -4, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)' }}
+            transition={springConfig}
+            className={`${kpi.bg} p-6 rounded-xl border border-neutral-200 shadow-sm transition-all group cursor-default`}
+          >
             <div className="flex items-center justify-between mb-4">
                <div className="flex items-center gap-2 text-neutral-400">
-                  <span className="p-1.5 bg-neutral-50 rounded-lg group-hover:text-neutral-600 transition-colors">{kpi.icon}</span>
+                  <span className="p-1.5 bg-neutral-50 rounded-lg group-hover:bg-neutral-100 group-hover:text-neutral-700 transition-colors">{kpi.icon}</span>
                   <span className="text-[10px] font-bold uppercase tracking-widest">{kpi.label}</span>
                </div>
-               <Info size={14} className="text-neutral-200 cursor-help" />
+               <Info size={14} className="text-neutral-200 hover:text-neutral-400 transition-colors cursor-help" />
             </div>
             <span className={`text-3xl font-black tracking-tighter ${kpi.color}`}>{kpi.valor}</span>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-neutral-200 shadow-sm">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-300">
           <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-8">Flujo de Depósitos Semanal</h3>
           <div className="h-72 w-full">
             <ResponsiveContainer>
@@ -123,7 +155,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
                 <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#a3a3a3', fontSize: 11}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#a3a3a3', fontSize: 11}} />
-                <Tooltip cursor={{fill: '#fafafa'}} contentStyle={{borderRadius: '12px', border: '1px solid #f5f5f5', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                <Tooltip cursor={{fill: '#fafafa'}} contentStyle={{borderRadius: '12px', border: '1px solid #f5f5f5', boxShadow: '0 8px 20px -3px rgb(0 0 0 / 0.1)'}} />
                 <Bar dataKey="esperado" fill="#e5e5e5" radius={[4, 4, 0, 0]} name="Esperado" barSize={28} />
                 <Bar dataKey="depositado" fill="#00C49F" radius={[4, 4, 0, 0]} name="Depositado" barSize={28} />
               </BarChart>
@@ -131,15 +163,15 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm flex flex-col">
+        <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
           <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-8">Distribución de Fuga</h3>
           <div className="flex-1 relative min-h-[200px]">
             <ResponsiveContainer>
               <PieChart>
                 <Pie data={datos.datosDeducciones} innerRadius={65} outerRadius={85} paddingAngle={6} dataKey="valor" stroke="none">
-                  {datos.datosDeducciones.map((e, i) => <Cell key={i} fill={COLORES[i % COLORES.length]} />)}
+                  {datos.datosDeducciones.map((e, i) => <Cell key={i} fill={COLORES[i % COLORES.length]} className="hover:opacity-80 transition-opacity duration-300 outline-none" />)}
                 </Pie>
-                <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 8px 20px -3px rgb(0 0 0 / 0.1)'}} />
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -148,10 +180,10 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Transactions Table */}
-      <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+      <motion.div variants={itemVariants} className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
         <div className="px-6 py-4 border-b border-neutral-100 flex justify-between items-center bg-neutral-50/50">
           <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-widest">Movimientos Recientes</h3>
           <button className="text-[10px] font-bold text-neutral-400 hover:text-neutral-900 transition-colors uppercase tracking-widest">Ver Historial Completo</button>
@@ -159,7 +191,7 @@ export default function Dashboard() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest border-b border-neutral-100">
+              <tr className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
                 <th className="px-6 py-4 font-bold">Identificador</th>
                 <th className="px-6 py-4 font-bold">Concepto</th>
                 <th className="px-6 py-4 font-bold">Fecha</th>
@@ -169,8 +201,8 @@ export default function Dashboard() {
             </thead>
             <tbody className="divide-y divide-neutral-50">
               {transacciones.map((t, i) => (
-                <tr key={i} className="hover:bg-neutral-50/50 transition-colors">
-                  <td className="px-6 py-4 font-mono text-[11px] text-neutral-400">{t.id}</td>
+                <tr key={i} className="hover:bg-neutral-50/50 transition-colors cursor-pointer group">
+                  <td className="px-6 py-4 font-mono text-[11px] text-neutral-400 group-hover:text-neutral-600 transition-colors">{t.id}</td>
                   <td className="px-6 py-4 text-sm font-semibold text-neutral-800">{t.tipo}</td>
                   <td className="px-6 py-4 text-xs text-neutral-500">{t.fecha}</td>
                   <td className={`px-6 py-4 text-sm font-bold text-right ${t.monto.startsWith('+') ? 'text-emerald-600' : 'text-neutral-900'}`}>{t.monto}</td>
@@ -182,7 +214,7 @@ export default function Dashboard() {
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
