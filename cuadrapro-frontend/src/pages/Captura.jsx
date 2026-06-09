@@ -18,7 +18,7 @@ export default function Captura() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('tokenCuadraPro');
-      await axios.post('${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/registrar', formulario, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/registrar`, formulario, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMensaje({ tipo: 'exito', texto: 'Registro persistido exitosamente en la bóveda.' });

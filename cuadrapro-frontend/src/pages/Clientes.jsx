@@ -15,7 +15,7 @@ export default function Clientes() {
   const cargarClientes = async () => {
     try {
       const token = localStorage.getItem('tokenCuadraPro');
-      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/v1/clientes/lista', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/clientes/lista`, { headers: { Authorization: `Bearer ${token}` } });
       setClientes(res.data);
       if(res.data.length > 0 && formUsuario.empresa_id === '') {
         setFormUsuario(prev => ({...prev, empresa_id: res.data[0].id}));
@@ -34,7 +34,7 @@ export default function Clientes() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('tokenCuadraPro');
-      await axios.post('${import.meta.env.VITE_API_URL}/api/v1/clientes/registrar', formEmpresa, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/clientes/registrar`, formEmpresa, { headers: { Authorization: `Bearer ${token}` } });
       mostrarAlerta('Empresa dada de alta exitosamente.', 'exito');
       setFormEmpresa({ nombre_comercial: '', rfc: '', plan_suscripcion: 'Basico' });
       cargarClientes();
@@ -44,7 +44,7 @@ export default function Clientes() {
   const registrarUsuario = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/v1/auth/registro', formUsuario);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/registro`, formUsuario);
       mostrarAlerta('Acceso B2B creado. El cliente ya puede entrar a su bóveda.', 'exito');
       setFormUsuario({ ...formUsuario, nombre_completo: '', email: '', password: '' });
     } catch (error) { mostrarAlerta('Error al crear el acceso.', 'error'); }
@@ -102,7 +102,7 @@ export default function Clientes() {
               <div>
                 <label className={labelClass}>Vincular a Empresa</label>
                 <select required value={formUsuario.empresa_id} onChange={e => setFormUsuario({...formUsuario, empresa_id: e.target.value})} className={inputClass}>
-                  {clientes.map(c => <option key={c.id} value={c.id}>{c.nombre_comercial}</option>)}
+                  {Array.isArray(clientes) && clientes.map(c => <option key={c.id} value={c.id}>{c.nombre_comercial}</option>)}
                 </select>
               </div>
               <div>
@@ -132,24 +132,24 @@ export default function Clientes() {
             <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-neutral-100">{clientes.length} Empresas Activas</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-[10px] font-black text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
-                  <th className="px-8 py-4">Cliente</th>
-                  <th className="px-8 py-4">Identificación Fiscal</th>
-                  <th className="px-8 py-4">Nivel de Cuenta</th>
-                  <th className="px-8 py-4 text-center">ID</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-50">
-                {clientes.map(cliente => (
-                  <tr key={cliente.id} className="hover:bg-neutral-50/50 transition-colors group">
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-400 group-hover:bg-b2bHighlight group-hover:text-white transition-all"><Briefcase size={16}/></div>
-                        <span className="text-sm font-semibold text-neutral-800">{cliente.nombre_comercial}</span>
-                      </div>
-                    </td>
+          <table className="w-full text-left">
+          <thead>
+            <tr className="text-[10px] font-black text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
+              <th className="px-8 py-4">Cliente</th>
+              <th className="px-8 py-4">Identificación Fiscal</th>
+              <th className="px-8 py-4">Nivel de Cuenta</th>
+              <th className="px-8 py-4 text-center">ID</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-neutral-50">
+            {Array.isArray(clientes) && clientes.map(cliente => (
+              <tr key={cliente.id} className="hover:bg-neutral-50/50 transition-colors group">
+                <td className="px-8 py-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-400 group-hover:bg-b2bHighlight group-hover:text-white transition-all"><Briefcase size={16}/></div>
+                    <span className="text-sm font-semibold text-neutral-800">{cliente.nombre_comercial}</span>
+                  </div>
+                </td>
                     <td className="px-8 py-5 text-sm font-mono text-neutral-500">{cliente.rfc}</td>
                     <td className="px-8 py-5">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${cliente.plan_suscripcion === 'Premium' ? 'bg-indigo-50 text-indigo-600' : cliente.plan_suscripcion === 'Pro' ? 'bg-emerald-50 text-emerald-600' : 'bg-neutral-100 text-neutral-600'}`}>{cliente.plan_suscripcion}</span>
