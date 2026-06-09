@@ -23,11 +23,11 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       if (!err.response) {
-        setError('No se pudo conectar con el servidor. Verifica que el backend esté encendido.');
+        setError(`No se pudo conectar con el servidor en ${import.meta.env.VITE_API_URL}. Verifica que el backend esté encendido.`);
       } else if (err.response.status === 401) {
         setError('Las credenciales ingresadas no coinciden con nuestros registros.');
       } else {
-        setError('Error inesperado. Intenta de nuevo más tarde.');
+        setError(`Error inesperado (${err.response.status}): ${err.response.data?.error || 'Sin detalle'}. URL: ${import.meta.env.VITE_API_URL}`);
       }
     }
   };
