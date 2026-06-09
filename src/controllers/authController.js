@@ -59,4 +59,37 @@ const registrarUsuario = async (req, res) => {
   }
 };
 
-module.exports = { login, registrarUsuario };
+const seedDemo = async (req, res) => {
+  const empresas = [
+    { nombre: 'InnovaTech Solutions', rfc: 'ITS230101ABC', plan: 'Enterprise' },
+    { nombre: 'Logística Global MX', rfc: 'LGM230202DEF', plan: 'Business' },
+    { nombre: 'Constructora del Norte', rfc: 'CDN230303GHI', plan: 'Pro' },
+    { nombre: 'Servicios Médicos Alfa', rfc: 'SMA230404JKL', plan: 'Business' },
+    { nombre: 'Alimentos y Bebidas Real', rfc: 'ABR230505MNO', plan: 'Pro' },
+    { nombre: 'Consultoría Integral B2B', rfc: 'CIB230606PQR', plan: 'Enterprise' },
+    { nombre: 'Textiles del Sur', rfc: 'TDS230707STU', plan: 'Business' },
+    { nombre: 'Energía Limpia SA', rfc: 'ELS230808VWX', plan: 'Enterprise' },
+    { nombre: 'Moda y Estilo Digital', rfc: 'MED230909YZA', plan: 'Pro' },
+    { nombre: 'Transportes Rápidos S.A.', rfc: 'TRA231010BCD', plan: 'Business' }
+  ];
+
+  try {
+    for (const e of empresas) {
+      const resEmpresa = await db.query(
+        'INSERT INTO empresas_clientes (nombre_comercial, rfc, plan_suscripcion) VALUES ($1, $2, $3) RETURNING id',
+        [e.nombre, e.rfc, e.plan]
+      );
+      const empresaId = resEmpresa.rows[0].id;
+      const email = `admin@${e.nombre.toLowerCase().replace(/ /g, '').replace(/[^a-z0-9]/g, '')}.com`;
+      await db.query(
+        'INSERT INTO usuarios_boveda (empresa_id, nombre_completo, email, password_hash, rol) VALUES ($1, $2, $3, $4, $5)',
+        [empresaId, `Admin ${e.nombre}`, email, 'hola1234', 'Administrador']
+      );
+    }
+    res.json({ mensaje: 'Demo poblada con 10 empresas y 10 usuarios exitosamente.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error en sembrado', detalle: error.message });
+  }
+};
+
+module.exports = { login, registrarUsuario, seedDemo };
