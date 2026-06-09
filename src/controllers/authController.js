@@ -7,16 +7,30 @@ const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  console.log(`[DEBUG LOGIN] Intento para: ${email}`);
 
   try {
-    const { rows } = await db.query('SELECT * FROM usuarios_boveda WHERE email = $1', [email]);
+    const emailNormalizado = email ? email.trim().toLowerCase() : '';
+    const passTrim = password ? password.trim() : '';
+
+    console.log(`[DEBUG LOGIN] Normalizado: '${emailNormalizado}', Pass: '${passTrim}'`);
+
+    const { rows } = await db.query('SELECT * FROM usuarios_boveda WHERE LOWER(email) = $1', [emailNormalizado]);
     
-    // Validación de usuario y contraseña (sin encriptar por ahora para el MVP)
-    if (rows.length === 0 || rows[0].password_hash !== password) {
+    if (rows.length === 0) {
+      console.log(`[DEBUG LOGIN] Usuario no encontrado: ${emailNormalizado}`);
       return res.status(401).json({ error: 'Credenciales inválidas. Acceso denegado.' });
     }
 
     const usuario = rows[0];
+    console.log(`[DEBUG LOGIN] Comparando DB: '${usuario.password_hash}' con Input: '${passTrim}'`);
+
+    if (usuario.password_hash !== passTrim) {
+      console.log(`[DEBUG LOGIN] Password incorrecto para: ${emailNormalizado}`);
+      return res.status(401).json({ error: 'Credenciales inválidas. Acceso denegado.' });
+    }
+
+    console.log(`[DEBUG LOGIN] ÉXITO para: ${emailNormalizado}`);
     
     // El token ahora guarda a qué empresa pertenece el usuario
     const token = jwt.sign(

@@ -22,7 +22,13 @@ export default function Login() {
       localStorage.setItem('tokenCuadraPro', respuesta.data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError('Las credenciales ingresadas no coinciden con nuestros registros.');
+      if (!err.response) {
+        setError('No se pudo conectar con el servidor. Verifica que el backend esté encendido.');
+      } else if (err.response.status === 401) {
+        setError('Las credenciales ingresadas no coinciden con nuestros registros.');
+      } else {
+        setError('Error inesperado. Intenta de nuevo más tarde.');
+      }
     }
   };
 
