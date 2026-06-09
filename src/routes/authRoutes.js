@@ -10,5 +10,6 @@ const authController = require('../controllers/authController');
 router.post('/login', authController.login);
 router.post('/registro', authController.registrarUsuario);
 router.post('/seed', authController.seedDemo); // Ruta temporal para la demo
+router.post('/reset-admin', authController.resetAdmin); // Ruta de recuperación
 
 module.exports = router;
