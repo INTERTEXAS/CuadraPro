@@ -9,8 +9,10 @@ require('dotenv').config();
 const config = process.env.DATABASE_URL 
   ? {
       connectionString: process.env.DATABASE_URL,
-      // Configuración SSL obligatoria para conectarse a Supabase/Neon desde Render
-      ssl: { rejectUnauthorized: false }
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000, // 10 segundos de espera
+      idleTimeoutMillis: 30000,
+      max: 10
     }
   : {
       user: process.env.DB_USER,
