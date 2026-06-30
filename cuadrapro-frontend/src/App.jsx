@@ -8,20 +8,27 @@ import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import Captura from './pages/Captura';
 import Configuracion from './pages/Configuracion';
+import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
+import RutaProtegida from './components/RutaProtegida';
+import { ToastProvider } from './context/ToastContext';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        {/* Rutas Privadas envueltas en el Layout */}
-        <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/captura" element={<Layout><Captura /></Layout>} />
-        <Route path="/clientes" element={<Layout><Clientes /></Layout>} />
-        <Route path="/configuracion" element={<Layout><Configuracion /></Layout>} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          {/* Rutas Privadas: Protegidas por JWT + envueltas en Layout */}
+          <Route path="/dashboard" element={<RutaProtegida><Layout><Dashboard /></Layout></RutaProtegida>} />
+          <Route path="/captura" element={<RutaProtegida><Layout><Captura /></Layout></RutaProtegida>} />
+          <Route path="/clientes" element={<RutaProtegida><Layout><Clientes /></Layout></RutaProtegida>} />
+          <Route path="/configuracion" element={<RutaProtegida><Layout><Configuracion /></Layout></RutaProtegida>} />
+          {/* Ruta Comodín 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }

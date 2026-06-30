@@ -19,4 +19,13 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-module.exports = { verificarToken };
+const requerirRol = (...rolesPermitidos) => {
+  return (req, res, next) => {
+    if (!req.usuario || !rolesPermitidos.includes(req.usuario.rol)) {
+      return res.status(403).json({ error: 'Acceso denegado. Permisos insuficientes para esta operación.' });
+    }
+    next();
+  };
+};
+
+module.exports = { verificarToken, requerirRol };
