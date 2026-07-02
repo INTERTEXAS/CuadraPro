@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Controlador de Conciliación y Auditoría Fiscal (SAT)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const xml2js = require('xml2js');
 const db = require('../config/db');

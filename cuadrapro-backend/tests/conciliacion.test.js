@@ -1,6 +1,6 @@
 // ===========================================================================
 // CuadraPro - Suite de Pruebas Unitarias del Motor Financiero
-// Firma: buhonero0
+// Firma: MLagunes
 // ===========================================================================
 
 describe('Pruebas Unitarias del Motor de Conciliación B2B', () => {

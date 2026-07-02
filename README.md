@@ -70,7 +70,7 @@ La plataforma está preparada para ser desplegada en entornos de nube modernos (
 
 ### Variables de Entorno (.env)
 
-**Backend:**
+**Backend (`cuadrapro-backend/.env`):**
 ```env
 PORT=3000
 DATABASE_URL=postgresql://[usuario]:[password]@db.[tudominio].supabase.co:5432/postgres
@@ -88,12 +88,16 @@ VITE_API_URL=https://api.tu-backend-render.com
 
 ```bash
 CuadraPro/
-├── src/                        # 🧠 Código fuente del Backend
-│   ├── config/db.js            # Conexión a PostgreSQL (con soporte SSL dinámico)
-│   ├── controllers/            # Lógica de negocio (auth, clientes, conciliaciones)
-│   ├── middlewares/            # Capas de seguridad (verificación JWT)
-│   ├── routes/                 # Enrutadores Express API v1
-│   └── index.js                # Archivo Maestro (Punto de entrada)
+├── cuadrapro-backend/          # 🧠 Código fuente y configs del Backend
+│   ├── src/
+│   │   ├── config/db.js        # Conexión a PostgreSQL (con soporte SSL dinámico)
+│   │   ├── controllers/        # Lógica de negocio (auth, clientes, conciliaciones)
+│   │   ├── middlewares/        # Capas de seguridad (verificación JWT)
+│   │   ├── routes/             # Enrutadores Express API v1
+│   │   └── index.js            # Archivo Maestro (Punto de entrada)
+│   ├── tests/                  # Suite de pruebas unitarias
+│   ├── .gitignore              # Exclusiones de backend (node_modules, .env)
+│   └── package.json            # Dependencias y scripts de Backend
 │
 ├── cuadrapro-frontend/         # 🎨 Aplicación React (SPA)
 │   ├── src/
@@ -103,8 +107,7 @@ CuadraPro/
 │   ├── tailwind.config.js      # Definición de tema monocromático y colores 'b2b'
 │   └── package.json            # Dependencias Frontend
 │
-├── .gitignore                  # Políticas de exclusión (Protección de .env)
-└── package.json                # Dependencias Backend
+└── .gitignore                  # Políticas de exclusión globales
 ```
 
 ---

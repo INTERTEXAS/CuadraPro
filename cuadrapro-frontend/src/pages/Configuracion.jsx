@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Configuración Maestría SaaS (v2.0 + Checkout + Soporte Mail)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

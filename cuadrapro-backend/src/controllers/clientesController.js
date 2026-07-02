@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Gestor de Clientes B2B (Seguro)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const db = require('../config/db');
 const logger = require('../config/logger');

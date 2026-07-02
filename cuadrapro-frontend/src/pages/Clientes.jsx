@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Gestor 360 Clean SaaS (Premium Floating)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState, useEffect } from 'react';
 import axios from 'axios';

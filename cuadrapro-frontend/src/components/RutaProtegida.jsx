@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Guardia de Rutas Protegidas
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';

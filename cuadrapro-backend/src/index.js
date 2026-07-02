@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Archivo Maestro B2B
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const express = require('express');
 const cors = require('cors');

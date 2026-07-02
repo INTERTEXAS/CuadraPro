@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Configuración de Winston Logger (Observabilidad)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const winston = require('winston');
 

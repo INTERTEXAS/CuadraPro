@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Layout Clean SaaS (Minimalist Floating)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';

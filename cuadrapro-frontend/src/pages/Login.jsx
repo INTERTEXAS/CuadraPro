@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Login Clean SaaS (Premium Design + Recuperación)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

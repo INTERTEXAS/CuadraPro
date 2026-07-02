@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Servicio de Auditoría (Audit Trail)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const db = require('../config/db');
 const logger = require('../config/logger');

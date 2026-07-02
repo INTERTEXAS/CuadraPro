@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Rutas de Clientes
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const express = require('express');
 const router = express.Router();

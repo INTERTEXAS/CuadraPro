@@ -1,6 +1,6 @@
 // ===========================================================================
 // Micro-SaaS: CuadraPro - Enrutador de Acceso
-// Firma Técnica: buhonero0
+// Firma Técnica: MLagunes
 // ===========================================================================
 const express = require('express');
 const router = express.Router();

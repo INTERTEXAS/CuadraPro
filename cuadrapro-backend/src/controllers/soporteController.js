@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Controlador de Soporte Automatizado (Nodemailer)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const nodemailer = require('nodemailer');
 const logger = require('../config/logger');

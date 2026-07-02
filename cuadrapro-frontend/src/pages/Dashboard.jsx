@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Dashboard Auditoría Premium (v2.0 + SAT + Detector de Fugas)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState, useEffect } from 'react';
 import axios from 'axios';

@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Módulo de Captura y Carga SAT (v2.0)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 import { useState } from 'react';
 import axios from 'axios';

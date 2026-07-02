@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Controlador de Autenticación (DB Real + Seguridad)
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');

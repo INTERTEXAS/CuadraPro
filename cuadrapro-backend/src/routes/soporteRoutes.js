@@ -1,6 +1,6 @@
 // ==========================================
 // CuadraPro - Rutas de Soporte B2B
-// Firma: buhonero0
+// Firma: MLagunes
 // ==========================================
 const express = require('express');
 const router = express.Router();
