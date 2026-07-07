@@ -16,8 +16,19 @@ export default function Landing() {
   const [saliendo, setSaliendo] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem('tokenCuadraPro')) {
-      navigate('/dashboard');
+    const token = localStorage.getItem('tokenCuadraPro');
+    if (token) {
+      try {
+        const payload = JSON.parse(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        const expiraEn = payload.exp * 1000;
+        if (Date.now() < expiraEn) {
+          navigate('/dashboard');
+        } else {
+          localStorage.removeItem('tokenCuadraPro');
+        }
+      } catch {
+        localStorage.removeItem('tokenCuadraPro');
+      }
     }
   }, [navigate]);
 
