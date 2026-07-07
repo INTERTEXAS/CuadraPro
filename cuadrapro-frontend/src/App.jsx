@@ -21,9 +21,8 @@ export default function App() {
     <ToastProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/landing" element={<Landing />} />
           {/* Rutas Privadas: Protegidas por JWT + envueltas en Layout */}
           <Route path="/dashboard" element={<RutaProtegida><Layout><Dashboard /></Layout></RutaProtegida>} />
           <Route path="/captura" element={<RutaProtegida><Layout><Captura /></Layout></RutaProtegida>} />
