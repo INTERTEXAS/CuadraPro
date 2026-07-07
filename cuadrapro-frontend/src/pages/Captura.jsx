@@ -139,8 +139,8 @@ export default function Captura() {
     }
   };
 
-  const inputClass = "w-full px-4 py-2.5 text-xs bg-neutral-50/60 border border-neutral-200/80 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white transition-all placeholder:text-neutral-400 text-neutral-800 font-semibold";
-  const labelClass = "block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1";
+  const inputClass = "w-full px-4 py-2.5 text-xs bg-neutral-50/60 border border-neutral-200/80 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white transition-all placeholder:text-neutral-500 text-neutral-800 font-semibold";
+  const labelClass = "block text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-2 ml-1";
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 pb-16">
@@ -186,14 +186,14 @@ export default function Captura() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
               />
               <div className="flex flex-col items-center justify-center space-y-4">
-                <div className={`p-3.5 rounded-2xl ${archivoBanco ? 'bg-emerald-100/50 text-emerald-600' : 'bg-neutral-50 border border-neutral-200/40 text-neutral-400'}`}>
+                <div className={`p-3.5 rounded-2xl ${archivoBanco ? 'bg-emerald-100/50 text-emerald-600' : 'bg-neutral-50 border border-neutral-200/40 text-neutral-500'}`}>
                   {archivoBanco ? <FileSpreadsheet size={26} /> : <UploadCloud size={26} />}
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-widest">
                     {archivoBanco ? 'Lote Conciliado' : 'Conciliación Bancaria Diaria'}
                   </h3>
-                  <p className="text-[11px] text-neutral-400 font-medium mt-1">
+                  <p className="text-[11px] text-neutral-500 font-medium mt-1">
                     {archivoBanco ? `Archivo: ${archivoBanco}` : 'Arrastra tu estado de cuenta CSV/XLSX o haz clic aquí.'}
                   </p>
                 </div>
@@ -201,7 +201,12 @@ export default function Captura() {
             </motion.div>
 
             {/* Formulario Cierre */}
-            <div className="bg-white p-10 rounded-3xl border border-neutral-200 shadow-sm">
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30, delay: 0.05 }}
+              className="bg-white p-10 rounded-3xl border border-neutral-200 shadow-sm"
+            >
               <div className="flex items-center gap-4 mb-8 pb-4 border-b border-neutral-100">
                 <div className="p-2.5 bg-neutral-900 text-white rounded-xl shadow-premium-sm"><CircleDollarSign size={18} /></div>
                 <h2 className="text-sm font-black text-neutral-900 uppercase tracking-widest">Cierre de Caja</h2>
@@ -240,8 +245,8 @@ export default function Captura() {
 
                 <div className="p-6 bg-neutral-50/60 rounded-2xl border border-neutral-200/30 space-y-5">
                   <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck size={14} className="text-neutral-400" />
-                    <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Deducciones de Terminal</h3>
+                    <ShieldCheck size={14} className="text-neutral-500" />
+                    <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Deducciones de Terminal</h3>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
@@ -261,7 +266,7 @@ export default function Captura() {
 
                 <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} type="submit" className="w-full py-3.5 bg-neutral-900 hover:bg-black text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-premium-sm flex items-center justify-center gap-2"><Save size={15} /> Persistir Registro</motion.button>
               </form>
-            </div>
+            </motion.div>
           </motion.div>
         ) : (
           <motion.div 
@@ -288,14 +293,14 @@ export default function Captura() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
               />
               <div className="flex flex-col items-center justify-center space-y-4">
-                <div className={`p-3.5 rounded-2xl ${xmlCargados.length > 0 ? 'bg-emerald-50 text-b2bHighlight border border-emerald-100' : 'bg-neutral-50 border border-neutral-200/40 text-neutral-400'}`}>
+                <div className={`p-3.5 rounded-2xl ${xmlCargados.length > 0 ? 'bg-emerald-50 text-b2bHighlight border border-emerald-100' : 'bg-neutral-50 border border-neutral-200/40 text-neutral-500'}`}>
                   {xmlCargados.length > 0 ? <CheckCircle size={26} /> : <FileCode size={26} />}
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-widest">
                     {cargandoSat ? 'Procesando Lote Fiscal...' : xmlCargados.length > 0 ? 'Comprobantes Cargados' : 'Carga Masiva de Facturas SAT'}
                   </h3>
-                  <p className="text-[11px] text-neutral-400 font-medium mt-1 leading-relaxed">
+                  <p className="text-[11px] text-neutral-500 font-medium mt-1 leading-relaxed">
                     {cargandoSat ? 'Leyendo e ingresando CFDIs...' : xmlCargados.length > 0 ? `${xmlCargados.length} facturas subidas en esta sesión` : 'Arrastra tus facturas CFDI en formato XML o haz clic aquí.'}
                   </p>
                 </div>
@@ -305,7 +310,7 @@ export default function Captura() {
             {/* Listado de archivos importados en sesión */}
             {xmlCargados.length > 0 && (
               <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm space-y-3">
-                <h4 className="text-[10px] font-black text-neutral-400 uppercase tracking-widest border-b border-neutral-100 pb-2">Historial de Carga Reciente</h4>
+                <h4 className="text-[10px] font-black text-neutral-500 uppercase tracking-widest border-b border-neutral-100 pb-2">Historial de Carga Reciente</h4>
                 <div className="max-h-40 overflow-y-auto space-y-1.5 font-mono text-[10px] text-neutral-600">
                   {xmlCargados.map((name, idx) => (
                     <div key={idx} className="flex justify-between py-1 border-b border-neutral-50 last:border-0">

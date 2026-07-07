@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, CartesianGrid } from 'recharts';
-import { Wallet, TrendingDown, ArrowDownRight, Download, Calendar, Activity, ArrowUpRight, Search, ChevronLeft, ChevronRight, FileCode, CheckCircle2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Wallet, TrendingDown, ArrowDownRight, Download, Calendar, Activity, ArrowUpRight, Search, ChevronLeft, ChevronRight, FileCode, CheckCircle2, AlertTriangle, RefreshCw, HelpCircle, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +28,7 @@ export default function Dashboard() {
 
   // Estado de alertas de fugas calculadas por el backend
   const [fugas, setFugas] = useState([]);
+  const [ocultarOnboarding, setOcultarOnboarding] = useState(localStorage.getItem('cuadrapro-hide-onboarding') === 'true');
 
   const { success, error: toastError } = useToast();
   const COLORES = ['#00C49F', '#3b82f6', '#f43f5e'];
@@ -125,17 +126,73 @@ export default function Dashboard() {
     success(`Generando reporte de aclaración para ${fuga.pasarelaAfectada} por $${fuga.fuga.toFixed(2)} MXN.`);
   };
 
-  // Movimientos financieros recientes (Simulados para el catálogo)
-  const transacciones = [
-    { id: 'TRX-1092', fecha: 'Hoy, 14:30', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $3,450.00', estatus: 'Completado' },
-    { id: 'TRX-1091', fecha: 'Hoy, 09:15', tipo: 'Retención SAT', pasarela: 'SAT', monto: '- $85.50', estatus: 'Deducido' },
-    { id: 'TRX-1090', fecha: 'Ayer, 18:45', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $1,200.00', estatus: 'Pendiente' },
-    { id: 'TRX-1089', fecha: '28 Jun, 12:10', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $4,890.00', estatus: 'Completado' },
-    { id: 'TRX-1088', fecha: '27 Jun, 15:30', tipo: 'Retención SAT', pasarela: 'SAT', monto: '- $120.00', estatus: 'Deducido' },
-    { id: 'TRX-1087', fecha: '27 Jun, 10:20', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $2,100.00', estatus: 'Completado' },
-    { id: 'TRX-1086', fecha: '26 Jun, 11:45', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $1,750.00', estatus: 'Completado' },
-    { id: 'TRX-1085', fecha: '25 Jun, 09:00', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $950.00', estatus: 'Completado' }
-  ];
+  // Movimientos financieros reales de la base de datos (con fallback a simulación si está vacía)
+  const flujosDeLaBoveda = datos?.flujosReal || [];
+  const transacciones = flujosDeLaBoveda.length > 0
+    ? flujosDeLaBoveda.flatMap(f => {
+        const registros = [];
+        const fechaFormateada = f.fecha_corte 
+          ? new Date(f.fecha_corte).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }) 
+          : f.dia;
+        
+        // Fila 1: Depósito Conciliado
+        registros.push({
+          id: `DEP-${f.id}`,
+          fecha: fechaFormateada,
+          tipo: 'Depósito Conciliado',
+          pasarela: parseFloat(f.comision_clip) > 0 ? 'Clip' : parseFloat(f.comision_mercadopago) > 0 ? 'Mercado Pago' : 'Banco',
+          monto: `+ $${parseFloat(f.esperado || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          estatus: 'Completado'
+        });
+
+        // Fila 2: Si hubo comisión Clip
+        if (parseFloat(f.comision_clip) > 0) {
+          registros.push({
+            id: `COM-${f.id}-CL`,
+            fecha: fechaFormateada,
+            tipo: 'Deducción Clip',
+            pasarela: 'Clip',
+            monto: `- $${parseFloat(f.comision_clip).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            estatus: 'Deducido'
+          });
+        }
+
+        // Fila 3: Si hubo comisión MercadoPago
+        if (parseFloat(f.comision_mercadopago) > 0) {
+          registros.push({
+            id: `COM-${f.id}-MP`,
+            fecha: fechaFormateada,
+            tipo: 'Deducción Mercado Pago',
+            pasarela: 'Mercado Pago',
+            monto: `- $${parseFloat(f.comision_mercadopago).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            estatus: 'Deducido'
+          });
+        }
+
+        // Fila 4: Si hubo retención SAT
+        if (parseFloat(f.retencion_sat) > 0) {
+          registros.push({
+            id: `RET-${f.id}-SAT`,
+            fecha: fechaFormateada,
+            tipo: 'Retención SAT',
+            pasarela: 'SAT',
+            monto: `- $${parseFloat(f.retencion_sat).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            estatus: 'Deducido'
+          });
+        }
+
+        return registros;
+      })
+    : [
+        { id: 'TRX-1092', fecha: 'Hoy, 14:30', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $3,450.00', estatus: 'Completado' },
+        { id: 'TRX-1091', fecha: 'Hoy, 09:15', tipo: 'Retención SAT', pasarela: 'SAT', monto: '- $85.50', estatus: 'Deducido' },
+        { id: 'TRX-1090', fecha: 'Ayer, 18:45', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $1,200.00', estatus: 'Pendiente' },
+        { id: 'TRX-1089', fecha: '28 Jun, 12:10', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $4,890.00', estatus: 'Completado' },
+        { id: 'TRX-1088', fecha: '27 Jun, 15:30', tipo: 'Retención SAT', pasarela: 'SAT', monto: '- $120.00', estatus: 'Deducido' },
+        { id: 'TRX-1087', fecha: '27 Jun, 10:20', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $2,100.00', estatus: 'Completado' },
+        { id: 'TRX-1086', fecha: '26 Jun, 11:45', tipo: 'Liquidación Clip', pasarela: 'Clip', monto: '+ $1,750.00', estatus: 'Completado' },
+        { id: 'TRX-1085', fecha: '25 Jun, 09:00', tipo: 'Cobro Mercado Pago', pasarela: 'Mercado Pago', monto: '+ $950.00', estatus: 'Completado' }
+      ];
 
   // Lógica de filtrado de transacciones
   const transaccionesFiltradas = transacciones.filter(t => {
@@ -328,8 +385,92 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* Widget de Onboarding Interactivo para Usuarios No-Devs */}
+      <AnimatePresence>
+        {!ocultarOnboarding && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={springConfig}
+            className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/15 p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6"
+          >
+            {/* Orbe decorativo */}
+            <div className="absolute -top-16 -right-16 w-32 h-32 bg-b2bHighlight/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div className="flex-1 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 bg-b2bHighlight/20 text-b2bHighlight rounded-xl"><CheckCircle2 size={16} /></span>
+                <h3 className="text-xs font-black text-neutral-800 dark:text-neutral-100 uppercase tracking-widest">Guía de Inicio de tu Bóveda</h3>
+              </div>
+              <p className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 leading-normal max-w-2xl">
+                ¡Hola! Bienvenido a CuadraPro. Tu bóveda de conciliación está al <span className="font-black text-b2bHighlight">66%</span> configurada de forma óptima para detectar fugas de dinero en pasarelas de pago y discrepancias fiscales ante el SAT. Completar los pasos te tomará menos de 2 minutos.
+              </p>
+
+              {/* Lista de pasos */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div className="flex items-center gap-2.5 p-3 bg-white dark:bg-[#121212] border border-neutral-200/40 dark:border-neutral-800/80 rounded-2xl">
+                  <CheckCircle2 size={15} className="text-b2bHighlight shrink-0" />
+                  <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300">1. Bóveda Conectada</span>
+                </div>
+                <div className="flex items-center gap-2.5 p-3 bg-white dark:bg-[#121212] border border-neutral-200/40 dark:border-neutral-800/80 rounded-2xl">
+                  <CheckCircle2 size={15} className="text-b2bHighlight shrink-0" />
+                  <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300">2. Acceso Google / Gmail</span>
+                </div>
+                <button
+                  onClick={() => navigate('/captura')}
+                  className="flex items-center justify-between p-3 bg-white dark:bg-[#121212] border border-dashed border-b2bHighlight/60 hover:border-b2bHighlight rounded-2xl text-left group transition-all"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-4 h-4 rounded-full border-2 border-b2bHighlight flex items-center justify-center shrink-0 group-hover:bg-b2bHighlight/10 transition-colors">
+                      <div className="w-1.5 h-1.5 bg-transparent rounded-full"></div>
+                    </div>
+                    <span className="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 group-hover:text-b2bHighlight transition-colors">3. Conciliar Caja Diaria</span>
+                  </div>
+                  <ArrowUpRight size={12} className="text-neutral-400 group-hover:text-b2bHighlight transition-colors" />
+                </button>
+              </div>
+
+              {/* Barra de progreso */}
+              <div className="space-y-1.5 max-w-md">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                  <span>Progreso de Configuración</span>
+                  <span>66% completado</span>
+                </div>
+                <div className="h-1.5 bg-neutral-200 dark:bg-neutral-850 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: '66%' }}
+                    transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.2 }}
+                    className="h-full bg-b2bHighlight rounded-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-row md:flex-col items-center gap-3 shrink-0 self-end md:self-center">
+              <button
+                onClick={() => {
+                  localStorage.setItem('cuadrapro-hide-onboarding', 'true');
+                  setOcultarOnboarding(true);
+                }}
+                className="px-4 py-2 text-[9px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
+              >
+                Ocultar guía
+              </button>
+              <button
+                onClick={() => navigate('/captura')}
+                className="px-5 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-black dark:hover:bg-white text-white dark:text-neutral-900 text-[9px] font-black uppercase tracking-widest rounded-2xl transition-all shadow-premium-md flex items-center gap-1.5"
+              >
+                Comenzar <ArrowUpRight size={12} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* KPIs Cards (4 Columnas) */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
             label: 'Total Esperado', 
@@ -339,7 +480,8 @@ export default function Dashboard() {
             trend: '+12.4% vs ayer', 
             trendIcon: <ArrowUpRight size={12} className="text-emerald-500" />,
             trendBg: 'bg-emerald-50 text-emerald-700 border border-emerald-100/30',
-            subtext: 'Flujo financiero esperado'
+            subtext: 'Flujo financiero esperado',
+            ayuda: 'Es la suma total del dinero que deberías haber recibido en tu banco antes de comisiones y retenciones.'
           },
           { 
             label: 'Fuga en Pasarelas', 
@@ -349,7 +491,8 @@ export default function Dashboard() {
             trend: '+5.1% de error', 
             trendIcon: <ArrowDownRight size={12} className="text-rose-500" />,
             trendBg: 'bg-rose-50 text-rose-700 border border-rose-100/30',
-            subtext: 'Deducciones de terminales'
+            subtext: 'Deducciones de terminales',
+            ayuda: 'Comisiones cobradas de más por terminales de tarjetas (Clip/MercadoPago) que no coinciden con sus tasas.'
           },
           { 
             label: 'Salud Fiscal (SAT)', 
@@ -359,7 +502,8 @@ export default function Dashboard() {
             trend: `Total: $${totalFacturadoSatVal.toLocaleString()}`, 
             trendIcon: estadoFiscalIcon,
             trendBg: estadoFiscalBg,
-            subtext: 'Conciliación CFDI vs Banco'
+            subtext: 'Conciliación CFDI vs Banco',
+            ayuda: 'Indica si tus facturas CFDI timbradas ante el SAT coinciden al 100% con los depósitos reales en tu banco.'
           },
           { 
             label: 'Estado de Salud', 
@@ -369,44 +513,61 @@ export default function Dashboard() {
             trend: '93.2% precisión', 
             trendIcon: <Activity size={12} className={estadoSaludVal === 'Óptimo' ? 'text-emerald-500' : 'text-amber-500'} />,
             trendBg: estadoSaludVal === 'Óptimo' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100/30' : 'bg-amber-50 text-amber-700 border border-amber-100/30',
-            subtext: 'Coincidencia de depósitos'
+            subtext: 'Coincidencia de depósitos',
+            ayuda: 'El porcentaje global de precisión y cuadratura de tus cuentas. Un valor óptimo es mayor al 90%.'
           }
         ].map((kpi, i) => (
           <motion.div 
             key={i} 
-            whileHover={{ y: -4 }}
+            variants={itemVariants}
+            whileHover={{ y: -6, scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
             transition={springConfig}
-            className="bg-white p-5 rounded-2xl border border-neutral-200/50 shadow-premium-sm hover:shadow-premium-md hover:border-neutral-300/60 transition-all group cursor-default relative overflow-hidden flex flex-col justify-between"
+            className="bg-white dark:bg-[#121212] p-5 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md hover:border-neutral-300/60 dark:hover:border-neutral-700/80 transition-all group cursor-default relative overflow-hidden flex flex-col justify-between"
           >
             <div className="absolute top-0 inset-x-0 h-1 bg-transparent group-hover:bg-b2bHighlight/40 transition-all duration-300"></div>
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="p-2 bg-neutral-50 rounded-xl text-neutral-500 group-hover:bg-neutral-100 group-hover:text-neutral-800 transition-colors border border-neutral-200/10">
+                  <span className="p-2 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl text-neutral-500 dark:text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-800 dark:group-hover:bg-neutral-800 dark:group-hover:text-white transition-colors border border-neutral-200/10 dark:border-neutral-800/20">
                     {kpi.icon}
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">{kpi.label}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">{kpi.label}</span>
+                  
+                  {/* Tooltip de ayuda para No-Devs */}
+                  <div className="relative group/tooltip">
+                    <HelpCircle size={12} className="text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-400 transition-colors cursor-pointer" />
+                    <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2.5 bg-neutral-900/95 dark:bg-neutral-800/95 text-[10px] font-medium text-neutral-200 leading-normal rounded-xl shadow-premium-lg pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center border border-neutral-800/40 dark:border-neutral-700/50 backdrop-blur-sm">
+                      {kpi.ayuda}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-900/95 dark:border-t-neutral-800/95"></div>
+                    </div>
+                  </div>
                 </div>
             </div>
             <div className="mb-2">
-              <span className={`text-xl font-black tracking-tight ${kpi.color}`}>{kpi.valor}</span>
+              <span className={`text-xl font-black tracking-tight font-mono ${kpi.color === 'text-neutral-900' ? 'text-neutral-900 dark:text-white' : kpi.color}`}>{kpi.valor}</span>
             </div>
-            <div className="mt-2 pt-2 border-t border-neutral-100/50 flex items-center justify-between">
+            <div className="mt-2 pt-2 border-t border-neutral-100/50 dark:border-neutral-800/50 flex items-center justify-between">
               <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-extrabold tracking-widest uppercase ${kpi.trendBg}`}>
                 {kpi.trendIcon} {kpi.trend}
               </div>
-              <p className="text-[9px] text-neutral-400 font-semibold">{kpi.subtext}</p>
+              <p className="text-[9px] text-neutral-500 dark:text-neutral-400 font-semibold">{kpi.subtext}</p>
             </div>
           </motion.div>
         ))}
       </motion.div>
 
       {/* Charts Section */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* BarChart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-neutral-200/50 shadow-premium-sm hover:shadow-premium-md transition-all duration-300">
+        <motion.div 
+          variants={itemVariants} 
+          whileHover={{ y: -2 }} 
+          transition={springConfig}
+          className="lg:col-span-2 bg-white dark:bg-[#121212] p-6 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300"
+        >
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Flujo de Depósitos Semanal</h3>
-            <div className="flex items-center gap-4 text-[10px] font-bold text-neutral-400">
+            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Flujo de Depósitos Semanal</h3>
+            <div className="flex items-center gap-4 text-[10px] font-bold text-neutral-500 dark:text-neutral-400">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 bg-neutral-200 rounded-full"></div> Esperado
               </div>
@@ -429,8 +590,8 @@ export default function Dashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
-                <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#a3a3a3', fontSize: 11}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#a3a3a3', fontSize: 11}} />
+                <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#525252', fontSize: 11}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#525252', fontSize: 11}} />
                 <Tooltip 
                   cursor={{fill: '#fafafa', opacity: 0.6}} 
                   contentStyle={{
@@ -446,11 +607,16 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
         {/* PieChart */}
-        <div className="bg-white p-6 rounded-2xl border border-neutral-200/50 shadow-premium-sm hover:shadow-premium-md transition-all duration-300 flex flex-col">
-          <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-6">Distribución de Fuga</h3>
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -2 }}
+          transition={springConfig}
+          className="bg-white dark:bg-[#121212] p-6 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300 flex flex-col"
+        >
+          <h3 className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6">Distribución de Fuga</h3>
           <div className="flex-1 relative min-h-[220px]">
             <ResponsiveContainer>
               <PieChart>
@@ -479,21 +645,21 @@ export default function Dashboard() {
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">Deducido</span>
-              <span className="text-2xl font-black text-neutral-900">${datos?.kpis?.fugaDeducciones.toLocaleString()}</span>
+              <span className="text-2xl font-black text-neutral-900 dark:text-white">${datos?.kpis?.fugaDeducciones.toLocaleString()}</span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Pestañas de Tabla (Lotes vs Fugas de Comisiones) */}
-      <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-neutral-200/50 shadow-premium-sm overflow-hidden hover:shadow-premium-md transition-all duration-300">
+      <motion.div variants={itemVariants} className="bg-white dark:bg-[#121212] rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm overflow-hidden hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300">
         
         {/* Cabecera Pestañas */}
-        <div className="px-6 py-4 border-b border-neutral-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-neutral-50/20">
-          <div className="flex gap-2 bg-neutral-100 p-1 rounded-xl w-fit border border-neutral-200/40">
+        <div className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-neutral-50/20 dark:bg-neutral-900/10">
+          <div className="flex gap-2 bg-neutral-100 dark:bg-neutral-850 p-1 rounded-xl w-fit border border-neutral-200/40 dark:border-neutral-800/30">
             <button 
               onClick={() => setTabTabla('lotes')}
-              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${tabTabla === 'lotes' ? 'bg-white text-neutral-900 shadow-sm' : 'text-neutral-500 hover:text-neutral-800'}`}
+              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${tabTabla === 'lotes' ? 'bg-white dark:bg-[#1c1c1c] text-neutral-900 dark:text-white shadow-sm' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'}`}
             >
               Lotes Diarios
             </button>
@@ -543,7 +709,7 @@ export default function Dashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
+                    <tr className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-100 bg-white">
                       <th className="px-6 py-4.5 font-bold">Identificador</th>
                       <th className="px-6 py-4.5 font-bold">Concepto</th>
                       <th className="px-6 py-4.5 font-bold">Fecha</th>
@@ -554,11 +720,23 @@ export default function Dashboard() {
                   <tbody className="divide-y divide-neutral-100/50">
                     {transaccionesPaginadas.length > 0 ? (
                       transaccionesPaginadas.map((t, i) => (
-                        <tr key={i} className="hover:bg-neutral-50/30 transition-premium cursor-pointer group">
-                          <td className="px-6 py-4.5 font-mono text-[11px] text-neutral-400 group-hover:text-neutral-600 transition-colors">{t.id}</td>
+                        <tr 
+                          key={i} 
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Transacción ${t.id}, ${t.tipo}, monto ${t.monto}, estado ${t.estatus}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              success(`Inspeccionando transacción ${t.id}`);
+                            }
+                          }}
+                          className="hover:bg-neutral-50/30 transition-premium cursor-pointer group focus:outline-none focus:bg-neutral-50 focus:ring-2 focus:ring-b2bHighlight/50"
+                        >
+                          <td className="px-6 py-4.5 font-mono text-[11px] text-neutral-500 group-hover:text-neutral-700 transition-colors">{t.id}</td>
                           <td className="px-6 py-4.5 text-sm font-semibold text-neutral-800">{t.tipo}</td>
                           <td className="px-6 py-4.5 text-xs text-neutral-500">{t.fecha}</td>
-                          <td className={`px-6 py-4.5 text-sm font-bold text-right ${t.monto.startsWith('+') ? 'text-emerald-600' : 'text-neutral-900'}`}>{t.monto}</td>
+                          <td className={`px-6 py-4.5 text-sm font-bold font-mono text-right ${t.monto.startsWith('+') ? 'text-emerald-600' : 'text-neutral-900'}`}>{t.monto}</td>
                           <td className="px-6 py-4.5 text-center">
                             <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider ${
                               t.estatus === 'Completado' 
@@ -572,7 +750,7 @@ export default function Dashboard() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="5" className="px-6 py-10 text-center text-xs text-neutral-400 font-semibold uppercase tracking-wider">
+                        <td colSpan="5" className="px-6 py-10 text-center text-xs text-neutral-500 font-semibold uppercase tracking-wider">
                           Ninguna transacción coincide con los criterios de búsqueda.
                         </td>
                       </tr>
@@ -618,7 +796,7 @@ export default function Dashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
+                    <tr className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-100 bg-white">
                       <th className="px-6 py-4.5 font-bold">Fecha Corte</th>
                       <th className="px-6 py-4.5 font-bold text-right">Monto Esperado</th>
                       <th className="px-6 py-4.5 font-bold text-right">Deducción Real</th>
@@ -631,13 +809,13 @@ export default function Dashboard() {
                     {fugas.length > 0 ? (
                       fugas.map((fuga) => (
                         <tr key={fuga.id} className="hover:bg-neutral-50/30 transition-premium cursor-default">
-                          <td className="px-6 py-4.5 text-neutral-500">
+                          <td className="px-6 py-4.5 text-neutral-600">
                             {new Date(fuga.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })} ({fuga.dia})
                           </td>
-                          <td className="px-6 py-4.5 text-right">${fuga.esperado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right text-neutral-500">${fuga.deduccionReal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right text-neutral-400 font-medium">${fuga.deduccionTeorica.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right font-black text-rose-600">${fuga.fuga.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                          <td className="px-6 py-4.5 text-right font-mono">${fuga.esperado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                          <td className="px-6 py-4.5 text-right text-neutral-600 font-mono">${fuga.deduccionReal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                          <td className="px-6 py-4.5 text-right text-neutral-500 font-medium font-mono">${fuga.deduccionTeorica.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                          <td className="px-6 py-4.5 text-right font-black text-rose-600 font-mono">${fuga.fuga.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
                           <td className="px-6 py-4.5 text-center">
                             <motion.button 
                               whileHover={{ scale: 1.05 }}

@@ -42,11 +42,11 @@ const registrarAuditoria = async (usuarioId, empresaId, ipAddress, accion, paylo
 const obtenerAuditorias = async (empresaId, limite = 50) => {
   try {
     const query = `
-      SELECT a.id, a.accion, a.payload, a.ip_address, a.created_at, u.nombre_completo, u.email
+      SELECT a.id, a.accion, a.payload, a.ip_address, a.fecha_evento AS created_at, u.nombre_completo, u.email
       FROM auditorias_sistema a
       LEFT JOIN usuarios_boveda u ON a.usuario_id = u.id
       WHERE a.empresa_id = $1
-      ORDER BY a.created_at DESC
+      ORDER BY a.fecha_evento DESC
       LIMIT $2;
     `;
     const { rows } = await db.query(query, [empresaId, limite]);

@@ -14,7 +14,7 @@ const obtenerDashboard = async (req, res) => {
   try {
     // 1. Obtener flujos del banco/pasarela
     let queryFlujos = `
-      SELECT dia_semana as dia, monto_esperado as esperado, monto_depositado as depositado,
+      SELECT id, fecha_corte, dia_semana as dia, monto_esperado as esperado, monto_depositado as depositado,
              comision_clip, comision_mercadopago, retencion_sat
       FROM flujos_financieros
       WHERE empresa_id = $1
@@ -70,7 +70,8 @@ const obtenerDashboard = async (req, res) => {
       datosDeducciones: [
         { nombre: 'Clip', valor: totalClip }, { nombre: 'Mercado Pago', valor: totalMercadoPago }, { nombre: 'SAT', valor: totalSat }
       ],
-      kpis: { totalEsperado, totalDepositado, fugaDeducciones, estadoSalud, totalFacturadoSat }
+      kpis: { totalEsperado, totalDepositado, fugaDeducciones, estadoSalud, totalFacturadoSat },
+      flujosReal: flujos // Enviamos el historial de flujos reales de la base de datos
     });
 
   } catch (error) {

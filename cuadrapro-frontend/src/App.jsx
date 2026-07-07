@@ -3,6 +3,7 @@
 // Firma: MLagunes
 // ==========================================
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
@@ -18,7 +19,7 @@ export default function App() {
     <ToastProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           {/* Rutas Privadas: Protegidas por JWT + envueltas en Layout */}
           <Route path="/dashboard" element={<RutaProtegida><Layout><Dashboard /></Layout></RutaProtegida>} />
