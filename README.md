@@ -1,74 +1,81 @@
+# 🛡️ CuadraPro — Bóveda de Conciliación Financiera B2B
+
 <div align="center">
-  <img src="https://img.shields.io/badge/Cuadra-PRO-00C49F?style=for-the-badge&logo=shield&logoColor=white" alt="CuadraPro Logo" width="200" />
-  <h1>Bóveda de Conciliación Financiera B2B</h1>
-  <p><em>Plataforma SaaS Multi-Tenant robustecida para el análisis y gestión de flujos de efectivo, deducciones y facturación corporativa.</em></p>
+  <img src="https://img.shields.io/badge/Cuadra-PRO-00C49F?style=for-the-badge&logo=shield&logoColor=white" alt="CuadraPro Logo" width="220" />
+  <p><strong>Plataforma SaaS Multi-Tenant robustecida para el análisis y gestión de flujos de efectivo, deducciones y facturación corporativa.</strong></p>
   
   <p>
-    <a href="#arquitectura"><img src="https://img.shields.io/badge/Stack-PERN-blue?style=flat-square&logo=postgresql" alt="Stack PERN" /></a>
-    <a href="#frontend"><img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite%20%2B%20Tailwind-61DAFB?style=flat-square&logo=react" alt="React" /></a>
-    <a href="#backend"><img src="https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-339933?style=flat-square&logo=nodedotjs" alt="Node.js" /></a>
-    <a href="#seguridad"><img src="https://img.shields.io/badge/Seguridad-AES--256--GCM%20%2B%20Zod%20%2B%20Helmet-green?style=flat-square&logo=express" alt="Seguridad" /></a>
+    <a href="#-arquitectura-tecnológica"><img src="https://img.shields.io/badge/Stack-PERN-blue?style=flat-square&logo=postgresql" alt="Stack PERN" /></a>
+    <a href="#-estructura-del-directorio"><img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite%20%2B%20Tailwind-61DAFB?style=flat-square&logo=react" alt="React" /></a>
+    <a href="#-arquitectura-tecnológica"><img src="https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-339933?style=flat-square&logo=nodedotjs" alt="Node.js" /></a>
+    <a href="#-seguridad-y-criptografía"><img src="https://img.shields.io/badge/Seguridad-AES--256--GCM%20%2B%20Zod%20%2B%20Helmet-green?style=flat-square&logo=express" alt="Seguridad" /></a>
   </p>
   
   <br />
-  
-  <img src="./assets/cuadrapro_mockup.jpg" alt="CuadraPro Interface Mockup" width="90%" style="border-radius: 16px; border: 1px solid rgba(229, 229, 229, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);" />
 </div>
 
 ---
 
-## Visión General
+## 📈 Visión General
 
-CuadraPro es una solución empresarial avanzada (SaaS) diseñada para resolver la conciliación bancaria y auditoría fiscal en negocios medianos y corporativos que operan con múltiples pasarelas de pago. La plataforma actúa como una bóveda centralizada donde se consolidan estados de cuenta bancarios, facturas CFDI del SAT e ingresos de pasarelas, detectando de forma automática discrepancias contables o comisiones abusivas no declaradas.
+**CuadraPro** es una solución empresarial avanzada (SaaS) diseñada para resolver la conciliación bancaria y la auditoría fiscal en negocios medianos y corporativos que operan con múltiples pasarelas de pago. La plataforma actúa como una **bóveda centralizada** donde se consolidan estados de cuenta bancarios, facturas CFDI del SAT e ingresos de pasarelas, detectando de forma automática discrepancias contables o comisiones abusivas no declaradas.
 
-El sistema se estructura bajo una arquitectura Multi-Tenant segura y robustecida bajo directrices de nivel senior, aislando estrictamente la información de cada empresa.
-
----
-
-## Características Principales
-
-### Dashboard Fintech
-* **KPIs con Ayuda Contextual**: Muestra métricas clave como el "Total Esperado", "Fuga en Pasarelas" (comisiones abusivas cobradas por Clip/MercadoPago), "Salud Fiscal SAT" (cruce de timbrados vs depósitos) y el "Estado de Salud" contable global.
-* **Glosario No-Devs**: Cada KPI dispone de un tooltip contextual animado que explica de forma cotidiana y en lenguaje claro el significado y relevancia de la métrica para el negocio.
-* **Analítica Visual**: Gráficos semanales y dona de distribución con degradados de color dinámicos.
-* **Historial de Conciliación**: Tabla transaccional que lee y desglosa en tiempo real los cortes de caja del perfil activo (Depósitos, deducciones de pasarela y retención SAT), con buscador, paginación y filtrado.
-
-### Modo Oscuro Elástico
-* Interruptor visual en la Sidebar que alterna entre temas claros y oscuros con transiciones ultra-suaves de Framer Motion.
-* Persistencia en `localStorage` y adaptación de paleta de colores corporativos.
-
-### Asistente de Inicio de Bóveda
-* Panel de gamificación que mide y reporta el porcentaje de configuración de la bóveda contable del usuario.
-* Lista de pasos interactivos que guían de forma amigable a los usuarios administrativos a completar su primera conciliación diaria.
-
-### Autenticación Integrada
-* Botón interactivo de inicio rápido con cuentas de Google/Gmail.
-* **Auto-registro Seguro**: Creación automática y transparente de perfiles para nuevos correos vinculados al Tenant correspondiente.
-* **Autocierre por Inactividad**: Mecanismo de escucha de eventos físicos que cierra sesión tras 2 minutos de inactividad, previniendo intrusiones en terminales de caja.
+El sistema se estructura bajo una arquitectura **Multi-Tenant segura**, aislando estrictamente la información de cada empresa y ofreciendo un rendimiento premium tanto en modo claro como en modo oscuro.
 
 ---
 
-## Arquitectura de Seguridad
+## ⚡ Características Principales
 
-* **Protección de Cabeceras HTTP (Helmet)**: Inyección de middlewares de seguridad para mitigar ataques comunes de scripting cruzado (XSS) y clickjacking.
-* **Validación de Datos con Zod**: Middleware que audita de forma estricta los formatos de entrada (correos, contraseñas y estructuras contables) antes de que toquen la base de datos PostgreSQL, blindando el backend contra SQL Injection.
-* **Cifrado Simétrico AES-256-GCM**: Módulo criptográfico que encripta en descanso tokens bancarios y secretos de pasarelas, generando tags de autenticación únicos para prevenir alteración de registros.
-* **Manejador de Errores Global**: Middleware centralizado de Express que intercepta fallos de base de datos o lógica, retornando respuestas estructuradas en JSON con código 500 y previniendo la fuga de stack traces en entornos de producción.
+El sistema utiliza los siguientes componentes y representaciones visuales integradas:
+
+*   📊 **Inicio (Dashboard Contable):**
+    *   **KPIs en Vivo:** Visualización en tiempo real del *Balance Total*, *Efectivo Disponible*, *Utilidad Neta* y *Gastos Totales* alimentados por la base de datos local.
+    *   **Glosario para No-Devs:** Tooltips contextuales interactivos y animados que explican de forma clara y cotidiana el significado de cada métrica.
+    *   **Rendimiento Financiero:** Gráfico compuesto interactivo de Recharts que combina ingresos mensuales vs. gastos en barra y área con degradado neón.
+    *   **Desglose de Gastos:** Gráfico de tipo dona (`PieChart`) que representa de forma visual las proporciones de deducciones (comisiones Clip, Mercado Pago, retenciones del SAT).
+
+*   👥 **Directorio B2B (Cuentas y Tenants):**
+    *   Gestión y administración maestro-inquilino (*Multi-Tenant*), permitiendo el registro y vinculación de perfiles de clientes y sus correspondientes niveles de cuenta (Básico, Profesional, Enterprise).
+
+*   💰 **Conciliación (Captura y Cargas):**
+    *   Módulo de carga y arrastre de estados de cuenta bancarios (CSV) e integraciones SAT. Formulario de arqueo diario de caja e ingreso manual de transacciones con inputs responsivos.
+
+*   📈 **Reportes (Auditoría Fiscal):**
+    *   Módulo interactivo que contrasta la facturación fiscal emitida en el SAT contra el volumen real conciliado en bancos. Historial descargable de auditorías contables listas para exportar a PDF, XLSX y CSV.
+
+*   💳 **Comisiones (Simulador de Pagos):**
+    *   Calculadora de dispersión de comisiones. Permite ingresar un monto y calcular al instante el Neto a Recibir restando la tasa del proveedor (*Clip*, *Mercado Pago*, *Stripe*), el IVA y la retención del SAT.
+
+*   ⚙️ **Configuración (Centro de Control):**
+    *   Centro de control donde el administrador puede definir comisiones base, consultar bitácoras de auditoría de seguridad y configurar credenciales fiscales CIEC.
+
+*   🌙 **Modo Claro / Oscuro Elástico:**
+    *   Toggle de tema integrado en el sidebar con animaciones de Framer Motion. Ajuste inteligente que actualiza gráficos y tablas para una lectura perfecta sin contrastes agresivos.
+
+*   ⚠️ **Control de Inactividad y Seguridad:**
+    *   Temporizador de inactividad que lanza un modal interactivo con **conteo regresivo en tiempo real** tras 90 segundos de inactividad contable. Si no hay interacción al finalizar los 30 segundos del conteo, la sesión se cierra automáticamente.
 
 ---
 
-## Paleta de Colores y Estética Corporativa
+## 🛡️ Seguridad y Criptografía
 
-* **Verde Esmeralda Fintech (`#00C49F`)**: Color acento principal utilizado en estados completados, checks de éxito y barras de progreso.
-* **Negro Profundo (`#0a0a0a`)**: Fondo general del documento en modo oscuro para reducir la fatiga visual.
-* **Carbón de Contraste (`#121212`)**: Color de fondo para tarjetas, cabecera del header flotante y barra lateral en modo oscuro.
-* **Tipografías**:
-  * **Plus Jakarta Sans**: Tipografía sans-serif principal para una jerarquía visual SaaS moderna.
-  * **IBM Plex Mono**: Tipografía para valores numéricos, montos y hashes transaccionales.
+*   **Protección de Cabeceras HTTP (Helmet):** Mitigación activa de ataques de scripting cruzado (XSS) y Clickjacking.
+*   **Validación Estricta con Zod:** Auditoría de esquemas de datos antes de interactuar con la base de datos PostgreSQL, previniendo inyecciones de SQL.
+*   **Cifrado Simétrico AES-256-GCM:** Encriptación robusta de tokens bancarios y secretos del SAT en descanso, firmados con tags de autenticación únicos.
+*   **Manejador de Errores Centralizado:** Interceptor de fallas de base de datos que previene la fuga de logs y stack traces al entorno del cliente.
 
 ---
 
-## Variables de Entorno
+## 🎨 Paleta de Colores y Estética
+
+*   **Verde Esmeralda Fintech (`#00C49F`):** Color acento principal utilizado en estados completados, checks de éxito y barras de progreso.
+*   **Negro Profundo (`#0B0F19`):** Fondo general del documento en modo oscuro para una estética tipo Figma.
+*   **Carbón de Contraste (`#151922`):** Color de fondo para tarjetas y barra lateral en modo oscuro.
+*   **Gris Claro (`#f8f9fa`):** Fondo general de la plataforma en modo claro para una visualización limpia y descansada.
+
+---
+
+## ⚙️ Variables de Entorno
 
 **Backend (`cuadrapro-backend/.env`):**
 ```env
@@ -84,7 +91,7 @@ VITE_API_URL=http://localhost:3000
 
 ---
 
-## Estructura del Directorio
+## 📂 Estructura del Directorio
 
 ```bash
 CuadraPro/
@@ -99,14 +106,14 @@ CuadraPro/
 │   │   ├── routes/                # Enrutadores Express API v1 con Zod
 │   │   ├── utils/cryptoHelper.js  # Suite de cifrado AES-256-GCM en descanso
 │   │   └── index.js               # Servidor maestro con Helmet y Global Error Handler
-│   ├── .gitignore                 # Exclusiones de backend (node_modules, .env, *.log)
-│   └── package.json               # Dependencias de Backend (helmet, zod, pg)
+│   ├── package.json               # Dependencias de Backend (helmet, zod, pg)
+│   └── .gitignore
 │
 ├── cuadrapro-frontend/            # Aplicación React (SPA)
 │   ├── src/
-│   │   ├── components/Layout.jsx  # Contenedor B2B (Switch Modo Oscuro y navegación móvil)
-│   │   ├── pages/                 # Vistas: Dashboard, Clientes, Captura, Configuración
-│   │   └── index.css              # Directivas Tailwind, sombras premium y layers
+│   │   ├── components/Layout.jsx  # Contenedor B2B (Modo Oscuro, buscador e inactividad)
+│   │   ├── pages/                 # Vistas: Dashboard, Clientes, Captura, Reportes, Pagos, Configuración
+│   │   └── index.css              # Directivas Tailwind y layers
 │   ├── tailwind.config.js         # Configuración del tema y colores 'b2b'
 │   └── package.json               # Dependencias Frontend (framer-motion, recharts)
 │
@@ -115,5 +122,5 @@ CuadraPro/
 
 ---
 <div align="center">
-  <i>Construido con precisión técnica, rigor de seguridad y refinamiento estético.</i>
+  <i>Construido con precisión contable, rigor de seguridad y refinamiento estético de nivel corporativo.</i>
 </div>

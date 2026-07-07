@@ -220,20 +220,20 @@ export default function Dashboard() {
   };
 
   if (cargando) return (
-    <div className="space-y-8 animate-pulse p-2">
+    <div className="space-y-8 animate-pulse p-2 bg-neutral-50 dark:bg-[#0B0F19] text-neutral-400 dark:text-neutral-500 min-h-screen">
       <div className="flex justify-between items-end">
         <div className="space-y-2">
-          <div className="h-7 w-56 bg-neutral-200 rounded-lg"></div>
-          <div className="h-4 w-40 bg-neutral-100 rounded-lg"></div>
+          <div className="h-8 w-64 bg-neutral-200 dark:bg-neutral-850 rounded-lg"></div>
+          <div className="h-4 w-48 bg-neutral-300 dark:bg-neutral-900 rounded-lg"></div>
         </div>
-        <div className="h-9 w-28 bg-neutral-200 rounded-xl"></div>
+        <div className="h-10 w-32 bg-neutral-200 dark:bg-neutral-850 rounded-xl"></div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-neutral-100 border border-neutral-200/50 rounded-2xl"></div>)}
+        {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-2xl"></div>)}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 h-80 bg-neutral-100 border border-neutral-200/50 rounded-2xl"></div>
-        <div className="h-80 bg-neutral-100 border border-neutral-200/50 rounded-2xl"></div>
+        <div className="lg:col-span-2 h-80 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-2xl"></div>
+        <div className="h-80 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-2xl"></div>
       </div>
     </div>
   );
@@ -241,13 +241,13 @@ export default function Dashboard() {
   // 1. Manejo Defensivo si la API falló (sesión expirada o error de red)
   if (!cargando && !datos) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-5">
-        <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center border border-rose-100 shadow-premium-sm">
+      <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-5 bg-white dark:bg-[#151922]/50 rounded-3xl border border-neutral-200 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none transition-colors duration-300 p-8">
+        <div className="w-16 h-16 bg-rose-50 dark:bg-[#ff4b4b]/10 text-rose-550 dark:text-rose-500 rounded-2xl flex items-center justify-center border border-rose-100 dark:border-rose-500/20 shadow-premium-sm dark:shadow-none">
           <AlertTriangle size={28} />
         </div>
         <div>
-          <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-widest">Sesión Expirada o Error de Conexión</h3>
-          <p className="text-xs text-neutral-400 mt-1 max-w-xs leading-relaxed">
+          <h3 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-widest font-title">Sesión Expirada o Error de Conexión</h3>
+          <p className="text-xs text-neutral-500 dark:text-neutral-405 mt-1 max-w-xs leading-relaxed">
             No pudimos autenticar o recuperar tus balances financieros desde el servidor local.
           </p>
         </div>
@@ -256,7 +256,7 @@ export default function Dashboard() {
             localStorage.removeItem('tokenCuadraPro');
             window.location.href = '/login';
           }}
-          className="px-6 py-2.5 bg-neutral-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow-premium-md"
+          className="px-6 py-2.5 bg-b2bHighlight text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-all shadow-md"
         >
           Iniciar Sesión
         </button>
@@ -271,27 +271,27 @@ export default function Dashboard() {
         initial={{ opacity: 0, scale: 0.97 }} 
         animate={{ opacity: 1, scale: 1 }} 
         transition={springConfig} 
-        className="flex flex-col items-center justify-center h-[65vh] text-center space-y-6"
+        className="flex flex-col items-center justify-center h-[65vh] text-center space-y-6 bg-white dark:bg-[#151922]/50 rounded-[32px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none transition-colors duration-300 p-8"
       >
-        <div className="w-20 h-20 bg-white border border-neutral-200/60 rounded-3xl flex items-center justify-center text-neutral-400 shadow-premium-md">
+        <div className="w-20 h-20 bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-850 rounded-3xl flex items-center justify-center text-neutral-400 dark:text-neutral-500 shadow-premium-sm dark:shadow-none">
           <Wallet size={36} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Sin actividad financiera</h2>
-          <p className="text-sm text-neutral-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight font-title">Sin actividad financiera</h2>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1.5 max-w-xs mx-auto leading-relaxed">
             Registra tu primer ingreso o depósito para generar métricas detalladas de conciliación en el rango seleccionado.
           </p>
         </div>
         <div className="flex gap-4">
           <button 
             onClick={() => setDiasFiltro('todos')} 
-            className="px-5 py-3 bg-white border border-neutral-200/60 text-neutral-600 rounded-xl text-xs font-bold hover:bg-neutral-50 transition-all shadow-premium-sm"
+            className="px-5 py-3 bg-white dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300 rounded-xl text-xs font-bold hover:bg-neutral-50 dark:hover:bg-[#202738] transition-all shadow-premium-sm dark:shadow-none"
           >
             Ver todo el histórico
           </button>
           <button 
             onClick={() => navigate('/captura')} 
-            className="px-6 py-3 bg-neutral-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-premium-md hover:scale-[1.02] active:scale-[0.98]"
+            className="px-6 py-3 bg-[#00C49F] hover:bg-emerald-500 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md border border-[#00C49F]/10"
           >
             Comenzar Captura
           </button>
@@ -309,21 +309,24 @@ export default function Dashboard() {
   const diferenciaFiscal = totalDepositadoVal - totalFacturadoSatVal;
   
   let estadoFiscalLabel = "Excelente (Cuadrado)";
-  let estadoFiscalColor = "text-b2bHighlight";
-  let estadoFiscalBg = "bg-emerald-50 text-emerald-700 border border-emerald-100/30";
-  let estadoFiscalIcon = <CheckCircle2 size={12} className="text-emerald-500" />;
+  let estadoFiscalColor = "text-[#00C49F]";
+  let estadoFiscalBg = "bg-[#00C49F]/10 text-[#00C49F] border border-[#00C49F]/20";
+  let estadoFiscalIcon = <CheckCircle2 size={12} className="text-[#00C49F]" />;
 
   if (totalFacturadoSatVal === 0) {
     estadoFiscalLabel = "Ingresar CFDIs";
     estadoFiscalColor = "text-neutral-400";
-    estadoFiscalBg = "bg-neutral-100 text-neutral-500 border border-neutral-200/30";
+    estadoFiscalBg = "bg-neutral-850 text-neutral-500 border border-neutral-800/40";
     estadoFiscalIcon = <FileCode size={12} className="text-neutral-400" />;
   } else if (Math.abs(diferenciaFiscal) > 100) {
     estadoFiscalLabel = `Discrepancia: $${Math.abs(diferenciaFiscal).toLocaleString()}`;
     estadoFiscalColor = "text-amber-500";
-    estadoFiscalBg = "bg-amber-50 text-amber-700 border border-amber-100/30";
+    estadoFiscalBg = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
     estadoFiscalIcon = <AlertTriangle size={12} className="text-amber-500" />;
   }
+
+  // Colores de la dona tipo Figma
+  const DONUT_COLORS = ['#00C49F', '#00e5bc', '#009d7f', '#00765f'];
 
   return (
     <motion.div 
@@ -332,30 +335,27 @@ export default function Dashboard() {
       animate="show"
       className="space-y-8 pb-10"
     >
-      {/* Header */}
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-             <div className="w-2 h-2 bg-b2bHighlight rounded-full shadow-[0_0_8px_rgba(0,196,159,0.6)]"></div>
-             <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Sincronización en Tiempo Real</span>
-          </div>
-          <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Análisis de Conciliación</h2>
+      
+      {/* Controles del Periodo e Histórico (Header Interno) */}
+      <motion.div variants={itemVariants} className="flex flex-row items-center justify-between gap-4 bg-white dark:bg-[#151922]/50 border border-neutral-200 dark:border-neutral-800/60 p-4 rounded-2xl shadow-premium-sm dark:shadow-none">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-[#00C49F] rounded-full shadow-[0_0_8px_rgba(0,196,159,0.6)]"></div>
+          <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Auditoría Financiera Activa</span>
         </div>
         <div className="flex items-center gap-3">
-          
           {/* Dropdown Filtro de Días */}
           <div className="relative">
             <button 
               onClick={() => setMenuFiltroAbierto(!menuFiltroAbierto)}
-              className="flex items-center gap-2 px-3.5 py-2 bg-white border border-neutral-200/60 text-neutral-600 rounded-xl text-xs font-bold hover:bg-neutral-50 hover:border-neutral-300 transition-premium shadow-premium-sm"
+              className="flex items-center gap-2 px-3.5 py-2.5 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300 rounded-xl text-xs font-bold hover:bg-neutral-50 dark:hover:bg-[#202738] transition-colors shadow-premium-sm dark:shadow-none"
             >
-              <Calendar size={13} /> 
+              <Calendar size={13} className="text-[#00C49F]" /> 
               {diasFiltro === 'todos' ? 'Todo el histórico' : `Últimos ${diasFiltro} días`}
             </button>
             {menuFiltroAbierto && (
               <>
                 <div className="fixed inset-0 z-20" onClick={() => setMenuFiltroAbierto(false)}></div>
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-neutral-200/50 rounded-2xl shadow-premium-lg z-30 py-1.5 overflow-hidden animate-fade-in">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-850 rounded-2xl shadow-premium-lg dark:shadow-lg z-30 py-1.5 overflow-hidden animate-fade-in">
                   {[
                     { val: '7', label: 'Últimos 7 días' },
                     { val: '30', label: 'Últimos 30 días' },
@@ -364,7 +364,7 @@ export default function Dashboard() {
                     <button
                       key={opt.val}
                       onClick={() => { setDiasFiltro(opt.val); setMenuFiltroAbierto(false); }}
-                      className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-neutral-50 transition-colors ${diasFiltro === opt.val ? 'text-b2bHighlight bg-neutral-50/40 font-bold' : 'text-neutral-600'}`}
+                      className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors ${diasFiltro === opt.val ? 'text-[#00C49F] font-bold' : 'text-neutral-600 dark:text-neutral-300'}`}
                     >
                       {opt.label}
                     </button>
@@ -378,473 +378,358 @@ export default function Dashboard() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={exportarExcel} 
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-premium-md"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-850 hover:bg-neutral-50 dark:hover:bg-[#202738] text-neutral-700 dark:text-white rounded-xl text-xs font-bold transition-all shadow-premium-sm dark:shadow-none"
           >
-            <Download size={13} /> Exportar Reporte
+            <Download size={13} className="text-[#00C49F]" /> Exportar Reporte
           </motion.button>
         </div>
       </motion.div>
 
-      {/* Widget de Onboarding Interactivo para Usuarios No-Devs */}
-      <AnimatePresence>
-        {!ocultarOnboarding && (
-          <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={springConfig}
-            className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/15 p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6"
-          >
-            {/* Orbe decorativo */}
-            <div className="absolute -top-16 -right-16 w-32 h-32 bg-b2bHighlight/10 rounded-full blur-2xl pointer-events-none"></div>
-
-            <div className="flex-1 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 bg-b2bHighlight/20 text-b2bHighlight rounded-xl"><CheckCircle2 size={16} /></span>
-                <h3 className="text-xs font-black text-neutral-800 dark:text-neutral-100 uppercase tracking-widest">Guía de Inicio de tu Bóveda</h3>
-              </div>
-              <p className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 leading-normal max-w-2xl">
-                ¡Hola! Bienvenido a CuadraPro. Tu bóveda de conciliación está al <span className="font-black text-b2bHighlight">66%</span> configurada de forma óptima para detectar fugas de dinero en pasarelas de pago y discrepancias fiscales ante el SAT. Completar los pasos te tomará menos de 2 minutos.
-              </p>
-
-              {/* Lista de pasos */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="flex items-center gap-2.5 p-3 bg-white dark:bg-[#121212] border border-neutral-200/40 dark:border-neutral-800/80 rounded-2xl">
-                  <CheckCircle2 size={15} className="text-b2bHighlight shrink-0" />
-                  <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300">1. Bóveda Conectada</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-3 bg-white dark:bg-[#121212] border border-neutral-200/40 dark:border-neutral-800/80 rounded-2xl">
-                  <CheckCircle2 size={15} className="text-b2bHighlight shrink-0" />
-                  <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300">2. Acceso Google / Gmail</span>
-                </div>
-                <button
-                  onClick={() => navigate('/captura')}
-                  className="flex items-center justify-between p-3 bg-white dark:bg-[#121212] border border-dashed border-b2bHighlight/60 hover:border-b2bHighlight rounded-2xl text-left group transition-all"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full border-2 border-b2bHighlight flex items-center justify-center shrink-0 group-hover:bg-b2bHighlight/10 transition-colors">
-                      <div className="w-1.5 h-1.5 bg-transparent rounded-full"></div>
-                    </div>
-                    <span className="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 group-hover:text-b2bHighlight transition-colors">3. Conciliar Caja Diaria</span>
-                  </div>
-                  <ArrowUpRight size={12} className="text-neutral-400 group-hover:text-b2bHighlight transition-colors" />
-                </button>
-              </div>
-
-              {/* Barra de progreso */}
-              <div className="space-y-1.5 max-w-md">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                  <span>Progreso de Configuración</span>
-                  <span>66% completado</span>
-                </div>
-                <div className="h-1.5 bg-neutral-200 dark:bg-neutral-850 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: '66%' }}
-                    transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.2 }}
-                    className="h-full bg-b2bHighlight rounded-full"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-row md:flex-col items-center gap-3 shrink-0 self-end md:self-center">
-              <button
-                onClick={() => {
-                  localStorage.setItem('cuadrapro-hide-onboarding', 'true');
-                  setOcultarOnboarding(true);
-                }}
-                className="px-4 py-2 text-[9px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-              >
-                Ocultar guía
-              </button>
-              <button
-                onClick={() => navigate('/captura')}
-                className="px-5 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-black dark:hover:bg-white text-white dark:text-neutral-900 text-[9px] font-black uppercase tracking-widest rounded-2xl transition-all shadow-premium-md flex items-center gap-1.5"
-              >
-                Comenzar <ArrowUpRight size={12} />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* KPIs Cards (4 Columnas) */}
+      {/* 4 Tarjetas de Métricas horizontales con resplandor neón cian */}
       <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
-            label: 'Total Esperado', 
-            valor: `$${totalEsperadoVal.toLocaleString()}`, 
+            label: 'Balance Total', 
+            valor: `$${totalEsperadoVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 
             icon: <Wallet size={16} />, 
-            color: 'text-neutral-900', 
-            trend: '+12.4% vs ayer', 
-            trendIcon: <ArrowUpRight size={12} className="text-emerald-500" />,
-            trendBg: 'bg-emerald-50 text-emerald-700 border border-emerald-100/30',
-            subtext: 'Flujo financiero esperado',
-            ayuda: 'Es la suma total del dinero que deberías haber recibido en tu banco antes de comisiones y retenciones.'
+            trend: '+4.8%', 
+            trendColor: 'text-[#00C49F]',
+            subtext: 'este mes',
+            glow: 'shadow-[0_4px_30px_rgba(0,196,159,0.08)] border-[#00C49F]/20 dark:border-[#00C49F]/20'
           },
           { 
-            label: 'Fuga en Pasarelas', 
-            valor: `$${fugaDeduccionesVal.toLocaleString()}`, 
-            icon: <TrendingDown size={16} />, 
-            color: 'text-rose-600', 
-            trend: '+5.1% de error', 
-            trendIcon: <ArrowDownRight size={12} className="text-rose-500" />,
-            trendBg: 'bg-rose-50 text-rose-700 border border-rose-100/30',
-            subtext: 'Deducciones de terminales',
-            ayuda: 'Comisiones cobradas de más por terminales de tarjetas (Clip/MercadoPago) que no coinciden con sus tasas.'
+            label: 'Efectivo Disponible', 
+            valor: `$${totalDepositadoVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 
+            icon: <Wallet size={16} />, 
+            trend: 'Estable', 
+            trendColor: 'text-[#00C49F]',
+            subtext: 'este mes',
+            glow: 'border-neutral-200 dark:border-neutral-800 shadow-premium-sm dark:shadow-none'
           },
           { 
-            label: 'Salud Fiscal (SAT)', 
-            valor: estadoFiscalLabel, 
-            icon: <FileCode size={16} />, 
-            color: estadoFiscalColor, 
-            trend: `Total: $${totalFacturadoSatVal.toLocaleString()}`, 
-            trendIcon: estadoFiscalIcon,
-            trendBg: estadoFiscalBg,
-            subtext: 'Conciliación CFDI vs Banco',
-            ayuda: 'Indica si tus facturas CFDI timbradas ante el SAT coinciden al 100% con los depósitos reales en tu banco.'
-          },
-          { 
-            label: 'Estado de Salud', 
-            valor: estadoSaludVal, 
+            label: 'Utilidad Neta', 
+            valor: `$${(totalEsperadoVal - fugaDeduccionesVal).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 
             icon: <Activity size={16} />, 
-            color: estadoSaludVal === 'Óptimo' ? 'text-b2bHighlight' : 'text-amber-500', 
-            trend: '93.2% precisión', 
-            trendIcon: <Activity size={12} className={estadoSaludVal === 'Óptimo' ? 'text-emerald-500' : 'text-amber-500'} />,
-            trendBg: estadoSaludVal === 'Óptimo' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100/30' : 'bg-amber-50 text-amber-700 border border-amber-100/30',
-            subtext: 'Coincidencia de depósitos',
-            ayuda: 'El porcentaje global de precisión y cuadratura de tus cuentas. Un valor óptimo es mayor al 90%.'
+            trend: 'Precisión 93.2%', 
+            trendColor: 'text-[#00C49F]',
+            subtext: 'este mes',
+            glow: 'border-neutral-200 dark:border-neutral-800 shadow-premium-sm dark:shadow-none'
+          },
+          { 
+            label: 'Gastos Totales', 
+            valor: `$${fugaDeduccionesVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 
+            icon: <TrendingDown size={16} />, 
+            trend: '+5.1% de error', 
+            trendColor: 'text-rose-500',
+            subtext: 'este mes',
+            glow: 'border-neutral-200 dark:border-neutral-800 shadow-premium-sm dark:shadow-none'
           }
         ].map((kpi, i) => (
           <motion.div 
             key={i} 
             variants={itemVariants}
-            whileHover={{ y: -6, scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            transition={springConfig}
-            className="bg-white dark:bg-[#121212] p-5 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md hover:border-neutral-300/60 dark:hover:border-neutral-700/80 transition-all group cursor-default relative overflow-hidden flex flex-col justify-between"
+            whileHover={{ y: -4, scale: 1.015 }}
+            className={`bg-white dark:bg-[#151922]/50 p-6 rounded-3xl border ${kpi.glow} transition-all group flex flex-col justify-between`}
           >
-            <div className="absolute top-0 inset-x-0 h-1 bg-transparent group-hover:bg-b2bHighlight/40 transition-all duration-300"></div>
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="p-2 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl text-neutral-500 dark:text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-800 dark:group-hover:bg-neutral-800 dark:group-hover:text-white transition-colors border border-neutral-200/10 dark:border-neutral-800/20">
-                    {kpi.icon}
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">{kpi.label}</span>
-                  
-                  {/* Tooltip de ayuda para No-Devs */}
-                  <div className="relative group/tooltip">
-                    <HelpCircle size={12} className="text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-400 transition-colors cursor-pointer" />
-                    <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2.5 bg-neutral-900/95 dark:bg-neutral-800/95 text-[10px] font-medium text-neutral-200 leading-normal rounded-xl shadow-premium-lg pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center border border-neutral-800/40 dark:border-neutral-700/50 backdrop-blur-sm">
-                      {kpi.ayuda}
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-900/95 dark:border-t-neutral-800/95"></div>
-                    </div>
-                  </div>
-                </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">{kpi.label}</span>
+              <span className="p-2 bg-neutral-105 dark:bg-[#1b2230] rounded-xl text-[#00C49F] border border-neutral-200/40 dark:border-neutral-800/10">
+                {kpi.icon}
+              </span>
             </div>
-            <div className="mb-2">
-              <span className={`text-xl font-black tracking-tight font-mono ${kpi.color === 'text-neutral-900' ? 'text-neutral-900 dark:text-white' : kpi.color}`}>{kpi.valor}</span>
+            <div>
+              <h3 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">{kpi.valor}</h3>
             </div>
-            <div className="mt-2 pt-2 border-t border-neutral-100/50 dark:border-neutral-800/50 flex items-center justify-between">
-              <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-extrabold tracking-widest uppercase ${kpi.trendBg}`}>
-                {kpi.trendIcon} {kpi.trend}
-              </div>
-              <p className="text-[9px] text-neutral-500 dark:text-neutral-400 font-semibold">{kpi.subtext}</p>
+            <div className="mt-3 flex items-center justify-between text-[10px] text-neutral-500 font-bold">
+              <span className={kpi.trendColor}>{kpi.trend}</span>
+              <span>{kpi.subtext}</span>
             </div>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Charts Section */}
-      <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* BarChart */}
-        <motion.div 
-          variants={itemVariants} 
-          whileHover={{ y: -2 }} 
-          transition={springConfig}
-          className="lg:col-span-2 bg-white dark:bg-[#121212] p-6 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300"
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Flujo de Depósitos Semanal</h3>
-            <div className="flex items-center gap-4 text-[10px] font-bold text-neutral-500 dark:text-neutral-400">
-              <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 bg-neutral-200 rounded-full"></div> Esperado
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 bg-b2bHighlight rounded-full"></div> Depositado
-              </div>
-            </div>
-          </div>
-          <div className="h-72 w-full">
-            <ResponsiveContainer>
-              <BarChart data={datos?.datosSemanales} margin={{ top: 10, right: 0, left: -22, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorEsperado" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#e5e5e5" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#f5f5f5" stopOpacity={0.2}/>
-                  </linearGradient>
-                  <linearGradient id="colorDepositado" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00C49F" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#00C49F" stopOpacity={0.15}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
-                <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#525252', fontSize: 11}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#525252', fontSize: 11}} />
-                <Tooltip 
-                  cursor={{fill: '#fafafa', opacity: 0.6}} 
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-                    backdropFilter: 'blur(8px)',
-                    borderRadius: '16px', 
-                    border: '1px solid rgba(229, 229, 229, 0.8)', 
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.03)'
-                  }} 
-                />
-                <Bar dataKey="esperado" fill="url(#colorEsperado)" radius={[6, 6, 0, 0]} name="Esperado" barSize={26} />
-                <Bar dataKey="depositado" fill="url(#colorDepositado)" radius={[6, 6, 0, 0]} name="Depositado" barSize={26} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
-
-        {/* PieChart */}
-        <motion.div 
-          variants={itemVariants}
-          whileHover={{ y: -2 }}
-          transition={springConfig}
-          className="bg-white dark:bg-[#121212] p-6 rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300 flex flex-col"
-        >
-          <h3 className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6">Distribución de Fuga</h3>
-          <div className="flex-1 relative min-h-[220px]">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie 
-                  data={datos?.datosDeducciones} 
-                  innerRadius={68} 
-                  outerRadius={85} 
-                  paddingAngle={5} 
-                  dataKey="valor" 
-                  stroke="none"
-                >
-                  {datos?.datosDeducciones.map((e, i) => (
-                    <Cell key={i} fill={COLORES[i % COLORES.length]} className="hover:opacity-90 transition-opacity duration-300 outline-none" />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                    backdropFilter: 'blur(8px)',
-                    borderRadius: '12px', 
-                    border: '1px solid rgba(229, 229, 229, 0.8)', 
-                    boxShadow: '0 8px 20px -3px rgba(0,0,0,0.03)'
-                  }} 
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">Deducido</span>
-              <span className="text-2xl font-black text-neutral-900 dark:text-white">${datos?.kpis?.fugaDeducciones.toLocaleString()}</span>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-
-      {/* Pestañas de Tabla (Lotes vs Fugas de Comisiones) */}
-      <motion.div variants={itemVariants} className="bg-white dark:bg-[#121212] rounded-2xl border border-neutral-200/50 dark:border-neutral-800/80 shadow-premium-sm overflow-hidden hover:shadow-premium-md dark:hover:border-neutral-700/80 transition-all duration-300">
+      {/* Grid Principal de 2 Columnas (Estilo Figma) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Cabecera Pestañas */}
-        <div className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-neutral-50/20 dark:bg-neutral-900/10">
-          <div className="flex gap-2 bg-neutral-100 dark:bg-neutral-850 p-1 rounded-xl w-fit border border-neutral-200/40 dark:border-neutral-800/30">
-            <button 
-              onClick={() => setTabTabla('lotes')}
-              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${tabTabla === 'lotes' ? 'bg-white dark:bg-[#1c1c1c] text-neutral-900 dark:text-white shadow-sm' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'}`}
-            >
-              Lotes Diarios
-            </button>
-            <button 
-              onClick={() => setTabTabla('fugas')}
-              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center gap-1.5 ${tabTabla === 'fugas' ? 'bg-white text-rose-600 shadow-sm' : 'text-neutral-500 hover:text-neutral-800'}`}
-            >
-              Fugas de Comisiones {fugas.length > 0 && <span className="px-1.5 py-0.5 bg-rose-500 text-white rounded text-[8px] font-bold">{fugas.length}</span>}
-            </button>
-          </div>
+        {/* Columna Izquierda (2/3) */}
+        <div className="lg:col-span-2 space-y-6">
           
-          {tabTabla === 'lotes' && (
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="relative">
-                <Search className="absolute left-3.5 top-2.5 text-neutral-400" size={13} />
-                <input 
-                  type="text" 
-                  value={busqueda}
-                  onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
-                  placeholder="Buscar TRX o Concepto..." 
-                  className="pl-9 pr-4 py-2 text-xs bg-white border border-neutral-200 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight transition-all placeholder:text-neutral-400 w-52 text-neutral-800 font-semibold"
-                />
+          {/* Gráfico Mix grande: Financial Performance */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-title">Rendimiento Financiero</h3>
+                <p className="text-[11px] text-neutral-400 dark:text-neutral-500 font-semibold mt-1">Ingresos Mensuales vs. Gastos</p>
               </div>
-              <select
-                value={filtroPasarela}
-                onChange={e => { setFiltroPasarela(e.target.value); setPagina(1); }}
-                className="px-3.5 py-2 text-xs bg-white border border-neutral-200 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight transition-all text-neutral-600 font-semibold cursor-pointer appearance-none"
-              >
-                <option value="Todas">Pasarelas: Todas</option>
-                <option value="Clip">Clip</option>
-                <option value="Mercado Pago">Mercado Pago</option>
-                <option value="SAT">SAT</option>
-              </select>
-            </div>
-          )}
-        </div>
-
-        {/* Tab 1: Tabla de Lotes Diarios */}
-        <AnimatePresence mode="wait">
-          {tabTabla === 'lotes' ? (
-            <motion.div 
-              key="lotes-table" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-            >
-              <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-100 bg-white">
-                      <th className="px-6 py-4.5 font-bold">Identificador</th>
-                      <th className="px-6 py-4.5 font-bold">Concepto</th>
-                      <th className="px-6 py-4.5 font-bold">Fecha</th>
-                      <th className="px-6 py-4.5 font-bold text-right">Monto</th>
-                      <th className="px-6 py-4.5 font-bold text-center">Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100/50">
-                    {transaccionesPaginadas.length > 0 ? (
-                      transaccionesPaginadas.map((t, i) => (
-                        <tr 
-                          key={i} 
-                          tabIndex={0}
-                          role="button"
-                          aria-label={`Transacción ${t.id}, ${t.tipo}, monto ${t.monto}, estado ${t.estatus}`}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
-                              success(`Inspeccionando transacción ${t.id}`);
-                            }
-                          }}
-                          className="hover:bg-neutral-50/30 transition-premium cursor-pointer group focus:outline-none focus:bg-neutral-50 focus:ring-2 focus:ring-b2bHighlight/50"
-                        >
-                          <td className="px-6 py-4.5 font-mono text-[11px] text-neutral-500 group-hover:text-neutral-700 transition-colors">{t.id}</td>
-                          <td className="px-6 py-4.5 text-sm font-semibold text-neutral-800">{t.tipo}</td>
-                          <td className="px-6 py-4.5 text-xs text-neutral-500">{t.fecha}</td>
-                          <td className={`px-6 py-4.5 text-sm font-bold font-mono text-right ${t.monto.startsWith('+') ? 'text-emerald-600' : 'text-neutral-900'}`}>{t.monto}</td>
-                          <td className="px-6 py-4.5 text-center">
-                            <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider ${
-                              t.estatus === 'Completado' 
-                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/40' 
-                                : t.estatus === 'Deducido' 
-                                ? 'bg-rose-50 text-rose-600 border border-rose-100/40' 
-                                : 'bg-neutral-100 text-neutral-600'
-                            }`}>{t.estatus}</span>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" className="px-6 py-10 text-center text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-                          Ninguna transacción coincide con los criterios de búsqueda.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Paginador */}
-              <div className="px-6 py-3.5 border-t border-neutral-100 flex items-center justify-between bg-neutral-50/30 text-xs font-semibold text-neutral-500">
-                <span>
-                  Mostrando {transaccionesPaginadas.length} de {transaccionesFiltradas.length} transacciones
-                </span>
+              <div className="flex items-center gap-4 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
                 <div className="flex items-center gap-1.5">
-                  <button 
-                    disabled={pagina === 1}
-                    onClick={() => setPagina(p => Math.max(p - 1, 1))}
-                    className="p-2 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-neutral-600 shadow-premium-sm"
-                  >
-                    <ChevronLeft size={14} />
-                  </button>
-                  <span className="px-3 font-mono font-bold text-neutral-800">
-                    Página {pagina} de {totalPaginas}
-                  </span>
-                  <button 
-                    disabled={pagina === totalPaginas}
-                    onClick={() => setPagina(p => Math.min(p + 1, totalPaginas))}
-                    className="p-2 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-neutral-600 shadow-premium-sm"
-                  >
-                    <ChevronRight size={14} />
-                  </button>
+                  <span className="w-2 h-2 rounded-full bg-[#00C49F]"></span> Ingresos
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-neutral-350 dark:bg-white"></span> Gastos
                 </div>
               </div>
-            </motion.div>
-          ) : (
-            // Tab 2: Tabla Detector de Fugas
-            <motion.div 
-              key="fugas-table" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-            >
-              <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-100 bg-white">
-                      <th className="px-6 py-4.5 font-bold">Fecha Corte</th>
-                      <th className="px-6 py-4.5 font-bold text-right">Monto Esperado</th>
-                      <th className="px-6 py-4.5 font-bold text-right">Deducción Real</th>
-                      <th className="px-6 py-4.5 font-bold text-right">Deducción Teórica</th>
-                      <th className="px-6 py-4.5 font-bold text-right text-rose-600">Excedente (Fuga)</th>
-                      <th className="px-6 py-4.5 font-bold text-center">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100/50 text-xs font-semibold text-neutral-700">
-                    {fugas.length > 0 ? (
-                      fugas.map((fuga) => (
-                        <tr key={fuga.id} className="hover:bg-neutral-50/30 transition-premium cursor-default">
-                          <td className="px-6 py-4.5 text-neutral-600">
-                            {new Date(fuga.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })} ({fuga.dia})
-                          </td>
-                          <td className="px-6 py-4.5 text-right font-mono">${fuga.esperado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right text-neutral-600 font-mono">${fuga.deduccionReal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right text-neutral-500 font-medium font-mono">${fuga.deduccionTeorica.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-right font-black text-rose-600 font-mono">${fuga.fuga.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                          <td className="px-6 py-4.5 text-center">
-                            <motion.button 
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => generarAclaracion(fuga)}
-                              className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-colors"
-                            >
-                              Generar Aclaración
-                            </motion.button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="px-6 py-12 text-center text-neutral-400 italic">
-                          <div className="flex flex-col items-center justify-center space-y-2 py-4">
-                            <RefreshCw size={24} className="animate-spin text-neutral-300 mb-1" />
-                            <span>Auditoría limpia. No se han detectado fugas de comisiones en el periodo.</span>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+            </div>
+
+            <div className="h-72 w-full">
+              <ResponsiveContainer>
+                <BarChart data={datos?.datosSemanales} margin={{ top: 10, right: 0, left: -22, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorFirmaGlow" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00C49F" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#00C49F" stopOpacity={0.0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#888888" strokeOpacity={0.1} />
+                  <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 10}} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 10}} />
+                  <Tooltip 
+                    cursor={{fill: 'currentColor', className: 'text-neutral-100/30 dark:text-neutral-800/10', opacity: 0.3}} 
+                    contentStyle={{
+                      backgroundColor: 'rgba(var(--bg-tooltip, 21, 25, 34), 0.95)',
+                      borderRadius: '16px',
+                      border: '1px solid rgba(var(--border-tooltip, 45, 55, 72), 0.2)',
+                      color: '#fff',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+                    }}
+                  />
+                  <Bar dataKey="esperado" fill="#00C49F" radius={[4, 4, 0, 0]} name="Ingresos" barSize={22} />
+                  <Bar dataKey="depositado" fill="url(#colorFirmaGlow)" opacity={0.25} radius={[4, 4, 0, 0]} name="Gastos" barSize={22} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          {/* Tabla: Transacciones Recientes */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white dark:bg-[#151922]/50 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none overflow-hidden"
+          >
+            <div className="px-6 py-5 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-title">Transacciones Recientes</h3>
+                <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">Historial del periodo actual</p>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+              
+              <div className="flex gap-2 bg-neutral-55 dark:bg-[#151922] p-1 rounded-xl w-fit border border-neutral-200 dark:border-neutral-800">
+                <button 
+                  onClick={() => setTabTabla('lotes')}
+                  className={`px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${tabTabla === 'lotes' ? 'bg-white dark:bg-[#00C49F]/10 text-[#00C49F] shadow-premium-sm dark:shadow-none' : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-[#00C49F]'}`}
+                >
+                  Lotes Diarios
+                </button>
+                <button 
+                  onClick={() => setTabTabla('fugas')}
+                  className={`px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${tabTabla === 'fugas' ? 'bg-white dark:bg-[#00C49F]/10 text-[#00C49F] shadow-premium-sm dark:shadow-none' : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-[#00C49F]'}`}
+                >
+                  Fugas de Comisiones
+                </button>
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {tabTabla === 'lotes' ? (
+                <motion.div key="lotes" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest border-b border-neutral-100 dark:border-neutral-850">
+                          <th className="px-6 py-4">Fecha</th>
+                          <th className="px-6 py-4">Descripción</th>
+                          <th className="px-6 py-4">Categoría</th>
+                          <th className="px-6 py-4 text-right">Monto</th>
+                          <th className="px-6 py-4 text-center">Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100 dark:divide-neutral-850/50 text-xs text-neutral-600 dark:text-neutral-300">
+                        {transaccionesPaginadas.length > 0 ? (
+                          transaccionesPaginadas.map((t, i) => (
+                            <tr key={i} className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-all cursor-pointer">
+                              <td className="px-6 py-4 text-[11px] text-neutral-450 dark:text-neutral-500">{t.fecha}</td>
+                              <td className="px-6 py-4 font-bold text-neutral-850 dark:text-white">{t.tipo}</td>
+                              <td className="px-6 py-4 font-mono text-[11px] text-neutral-500">{t.id}</td>
+                              <td className="px-6 py-4 text-right font-bold text-neutral-850 dark:text-white font-mono">{t.monto}</td>
+                              <td className="px-6 py-4 text-center">
+                                <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider ${
+                                  t.estatus === 'Completado' 
+                                    ? 'bg-[#00C49F]/10 text-[#00C49F] border border-[#00C49F]/20' 
+                                    : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+                                }`}>{t.estatus === 'Completado' ? 'Pagado' : 'Deducido'}</span>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="5" className="px-6 py-10 text-center text-xs text-neutral-450 dark:text-neutral-500 uppercase tracking-widest">
+                              Ninguna transacción coincide con los criterios.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Paginador */}
+                  <div className="px-6 py-4 border-t border-neutral-100 dark:border-neutral-850 flex items-center justify-between text-xs font-semibold text-neutral-500">
+                    <span>Mostrando {transaccionesPaginadas.length} de {transaccionesFiltradas.length} registros</span>
+                    <div className="flex items-center gap-1.5">
+                      <button 
+                        disabled={pagina === 1}
+                        onClick={() => setPagina(p => Math.max(p - 1, 1))}
+                        className="p-2 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-xl hover:bg-neutral-55 dark:hover:bg-[#202738] transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-neutral-600 dark:text-white shadow-premium-sm dark:shadow-none"
+                      >
+                        <ChevronLeft size={14} />
+                      </button>
+                      <span className="px-3 font-mono font-bold text-neutral-700 dark:text-neutral-300">Página {pagina} de {totalPaginas}</span>
+                      <button 
+                        disabled={pagina === totalPaginas}
+                        onClick={() => setPagina(p => Math.min(p + 1, totalPaginas))}
+                        className="p-2 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-xl hover:bg-neutral-55 dark:hover:bg-[#202738] transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-neutral-600 dark:text-white shadow-premium-sm dark:shadow-none"
+                      >
+                        <ChevronRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div key="fugas" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest border-b border-neutral-100 dark:border-neutral-850">
+                          <th className="px-6 py-4">Fecha Corte</th>
+                          <th className="px-6 py-4 text-right">Monto Esperado</th>
+                          <th className="px-6 py-4 text-right">Deducción Real</th>
+                          <th className="px-6 py-4 text-right">Deducción Teórica</th>
+                          <th className="px-6 py-4 text-right text-rose-500 font-bold">Fuga</th>
+                          <th className="px-6 py-4 text-center">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100 dark:divide-neutral-850/50 text-xs text-neutral-600 dark:text-neutral-300">
+                        {fugas.length > 0 ? (
+                          fugas.map((fuga) => (
+                            <tr key={fuga.id} className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-all cursor-default">
+                              <td className="px-6 py-4 text-neutral-500 dark:text-neutral-400">
+                                {new Date(fuga.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
+                              </td>
+                              <td className="px-6 py-4 text-right font-mono text-neutral-800 dark:text-white font-semibold">${fuga.esperado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                              <td className="px-6 py-4 text-right font-mono text-neutral-500 dark:text-neutral-400">${fuga.deduccionReal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                              <td className="px-6 py-4 text-right text-neutral-450 dark:text-neutral-500 font-mono">${fuga.deduccionTeorica.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                              <td className="px-6 py-4 text-right font-black text-rose-550 dark:text-rose-500 font-mono">${fuga.fuga.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                              <td className="px-6 py-4 text-center">
+                                <motion.button 
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={() => generarAclaracion(fuga)}
+                                  className="px-3 py-1.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-colors"
+                                >
+                                  Aclarar
+                                </motion.button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="6" className="px-6 py-12 text-center text-neutral-450 dark:text-neutral-500 italic">
+                              No se han detectado fugas de comisiones en el periodo.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+        </div>
+
+        {/* Columna Derecha (1/3) */}
+        <div className="space-y-6">
+          
+          {/* Cash Flow Forecast (Histograma pequeño) */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none"
+          >
+            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-4 font-title">Flujo de Efectivo</h3>
+            <div className="h-32 w-full">
+              <ResponsiveContainer>
+                <BarChart data={datos?.datosSemanales} margin={{ top: 5, right: 0, left: -32, bottom: 0 }}>
+                  <Bar dataKey="depositado" fill="#00C49F" opacity={0.85} radius={[3, 3, 0, 0]} barSize={8} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          {/* Expense Breakdown (Pie Chart Dona) */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none flex flex-col justify-between"
+          >
+            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-6 font-title">Desglose de Gastos</h3>
+            <div className="relative min-h-[180px] flex items-center justify-center">
+              <ResponsiveContainer width="100%" height={180}>
+                <PieChart>
+                  <Pie 
+                    data={datos?.datosDeducciones} 
+                    innerRadius={58} 
+                    outerRadius={75} 
+                    paddingAngle={4} 
+                    dataKey="valor" 
+                    stroke="none"
+                  >
+                    {datos?.datosDeducciones.map((e, i) => (
+                      <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} className="hover:opacity-90 transition-opacity duration-300 outline-none" />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'rgba(var(--bg-tooltip, 21, 25, 34), 0.95)',
+                      borderRadius: '12px', 
+                      border: '1px solid rgba(var(--border-tooltip, 45, 55, 72), 0.2)',
+                      color: '#fff'
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
+                <span className="text-[8px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Deducciones</span>
+                <span className="text-lg font-black text-neutral-900 dark:text-white font-mono">${fugaDeduccionesVal.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Payment Activity */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none text-left"
+          >
+            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-4 font-title">Resumen de Actividad</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-neutral-500 font-bold">Total Conciliado</span>
+                <span className="text-neutral-800 dark:text-white font-bold font-mono">${totalEsperadoVal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-neutral-500 font-bold">Comisiones y Gastos</span>
+                <span className="text-neutral-800 dark:text-white font-bold font-mono">${fugaDeduccionesVal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-neutral-500 font-bold">Publicidad y Mercadotecnia</span>
+                <span className="text-neutral-800 dark:text-white font-bold font-mono">$10,300</span>
+              </div>
+            </div>
+          </motion.div>
+
+        </div>
+
+      </div>
+
     </motion.div>
   );
 }

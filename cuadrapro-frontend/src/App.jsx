@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import Captura from './pages/Captura';
 import Configuracion from './pages/Configuracion';
+import Reportes from './pages/Reportes';
+import Pagos from './pages/Pagos';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
 import RutaProtegida from './components/RutaProtegida';
@@ -26,6 +28,8 @@ export default function App() {
           <Route path="/captura" element={<RutaProtegida><Layout><Captura /></Layout></RutaProtegida>} />
           <Route path="/clientes" element={<RutaProtegida><Layout><Clientes /></Layout></RutaProtegida>} />
           <Route path="/configuracion" element={<RutaProtegida><Layout><Configuracion /></Layout></RutaProtegida>} />
+          <Route path="/reportes" element={<RutaProtegida><Layout><Reportes /></Layout></RutaProtegida>} />
+          <Route path="/pagos" element={<RutaProtegida><Layout><Pagos /></Layout></RutaProtegida>} />
           {/* Ruta Comodín 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>

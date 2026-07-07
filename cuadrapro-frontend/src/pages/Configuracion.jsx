@@ -284,17 +284,17 @@ export default function Configuracion() {
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <span className="px-2 py-0.5 bg-neutral-100 text-neutral-500 rounded text-[10px] font-black uppercase tracking-widest border border-neutral-200">System Core</span>
+             <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 rounded text-[10px] font-black uppercase tracking-widest border border-neutral-200 dark:border-neutral-800">System Core</span>
           </div>
-          <h2 className="text-3xl font-black text-neutral-900 tracking-tighter">Centro de Control</h2>
-          <p className="text-sm text-neutral-400 font-medium mt-1">Configuración global y gestión de servicios.</p>
+          <h2 className="text-3xl font-black text-neutral-900 dark:text-white tracking-tighter">Centro de Control</h2>
+          <p className="text-sm text-neutral-400 dark:text-neutral-500 font-medium mt-1">Configuración global y gestión de servicios.</p>
         </div>
-        <div className="flex flex-wrap gap-2 bg-neutral-100 p-1.5 rounded-2xl w-fit border border-neutral-200">
-           <button onClick={() => setTabActiva('perfil')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'perfil' ? 'bg-white text-neutral-900 shadow-md' : 'text-neutral-500 hover:text-neutral-800'}`}>Perfil y Equipo</button>
-           <button onClick={() => setTabActiva('boveda')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'boveda' ? 'bg-white text-neutral-900 shadow-md' : 'text-neutral-500 hover:text-neutral-800'}`}>Bóvedas</button>
-           <button onClick={() => setTabActiva('planes')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'planes' ? 'bg-white text-neutral-900 shadow-md' : 'text-neutral-500 hover:text-neutral-800'}`}>Planes y Consumo</button>
+        <div className="flex flex-wrap gap-2 bg-neutral-100 dark:bg-[#151922] p-1.5 rounded-2xl w-fit border border-neutral-200 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
+           <button onClick={() => setTabActiva('perfil')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'perfil' ? 'bg-white dark:bg-[#1c2333] text-neutral-900 dark:text-white shadow-premium-sm dark:shadow-none' : 'text-neutral-550 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-white'}`}>Perfil y Equipo</button>
+           <button onClick={() => setTabActiva('boveda')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'boveda' ? 'bg-white dark:bg-[#1c2333] text-neutral-900 dark:text-white shadow-premium-sm dark:shadow-none' : 'text-neutral-550 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-white'}`}>Bóvedas</button>
+           <button onClick={() => setTabActiva('planes')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'planes' ? 'bg-white dark:bg-[#1c2333] text-neutral-900 dark:text-white shadow-premium-sm dark:shadow-none' : 'text-neutral-550 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-white'}`}>Planes y Consumo</button>
            {userRol === 'SuperAdmin' && (
-             <button onClick={() => setTabActiva('admin')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'admin' ? 'bg-white text-neutral-900 shadow-md' : 'text-neutral-500 hover:text-neutral-800'}`}>Admin</button>
+             <button onClick={() => setTabActiva('admin')} className={`px-6 py-2.5 text-[13px] font-black uppercase tracking-widest rounded-xl transition-all ${tabActiva === 'admin' ? 'bg-white dark:bg-[#1c2333] text-neutral-900 dark:text-white shadow-premium-sm dark:shadow-none' : 'text-neutral-550 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-white'}`}>Admin</button>
            )}
         </div>
       </motion.div>
@@ -306,27 +306,27 @@ export default function Configuracion() {
           
           <div className="lg:col-span-2 space-y-8">
             {/* Registro de Colaboradores */}
-            <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm">
+            <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="text-lg font-black text-neutral-900 tracking-tight uppercase">Colaboradores de Equipo</h3>
-                  <p className="text-xs text-neutral-400 font-medium">Gestiona accesos y roles de tu organización.</p>
+                  <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight uppercase font-title">Colaboradores de Equipo</h3>
+                  <p className="text-xs text-neutral-400 dark:text-neutral-500 font-medium">Gestiona accesos y roles de tu organización.</p>
                 </div>
-                <div className="flex items-center gap-1 bg-emerald-50 text-b2bHighlight px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                <div className="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-500/10 text-[#00C49F] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-[#00C49F]/10">
                   <Users size={12} /> {colaboradores.length} Activos
                 </div>
               </div>
 
-              <div className="divide-y divide-neutral-100">
+              <div className="divide-y divide-neutral-100 dark:divide-neutral-850/60">
                 {colaboradores.map((colab) => (
                   <div key={colab.email} className="flex justify-between items-center py-4 first:pt-0 last:pb-0">
                     <div>
-                      <h4 className="text-sm font-bold text-neutral-800">{colab.nombre}</h4>
-                      <p className="text-xs text-neutral-400 font-mono mt-0.5">{colab.email}</p>
+                      <h4 className="text-sm font-bold text-neutral-800 dark:text-white">{colab.nombre}</h4>
+                      <p className="text-xs text-neutral-405 dark:text-neutral-500 font-mono mt-0.5">{colab.email}</p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="px-2.5 py-1 bg-neutral-100 text-neutral-600 rounded-lg text-[10px] font-black uppercase tracking-widest">{colab.rol}</span>
-                      <button onClick={() => eliminarColaborador(colab.email)} className="p-2 text-neutral-300 hover:text-red-500 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                      <span className="px-2.5 py-1 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-lg text-[10px] font-black uppercase tracking-widest">{colab.rol}</span>
+                      <button onClick={() => eliminarColaborador(colab.email)} className="p-2 text-neutral-300 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-400 rounded-lg transition-colors"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
@@ -334,26 +334,26 @@ export default function Configuracion() {
             </div>
 
             {/* Formulario Invitación */}
-            <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm">
-              <h3 className="text-sm font-black text-neutral-900 tracking-wider uppercase mb-6 ml-1">Invitar Colaborador</h3>
+            <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
+              <h3 className="text-sm font-black text-neutral-900 dark:text-white tracking-wider uppercase mb-6 ml-1">Invitar Colaborador</h3>
               <form onSubmit={agregarColaborador} className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Nombre Completo</label>
-                  <input type="text" value={nuevoColaborador.nombre} onChange={e => setNuevoColaborador({...nuevoColaborador, nombre: e.target.value})} className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white transition-all font-semibold text-neutral-800" placeholder="Ej. Juan Pérez" />
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Nombre Completo</label>
+                  <input type="text" value={nuevoColaborador.nombre} onChange={e => setNuevoColaborador({...nuevoColaborador, nombre: e.target.value})} className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white dark:focus:bg-[#151922] transition-all font-semibold text-neutral-850 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500" placeholder="Ej. Juan Pérez" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Correo Electrónico</label>
-                  <input type="email" value={nuevoColaborador.email} onChange={e => setNuevoColaborador({...nuevoColaborador, email: e.target.value})} className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white transition-all font-semibold text-neutral-800" placeholder="juan@empresa.com" />
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Correo Electrónico</label>
+                  <input type="email" value={nuevoColaborador.email} onChange={e => setNuevoColaborador({...nuevoColaborador, email: e.target.value})} className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white dark:focus:bg-[#151922] transition-all font-semibold text-neutral-850 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500" placeholder="juan@empresa.com" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Asignar Rol</label>
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Asignar Rol</label>
                   <div className="flex gap-2">
-                    <select value={nuevoColaborador.rol} onChange={e => setNuevoColaborador({...nuevoColaborador, rol: e.target.value})} className="flex-1 px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white transition-all font-semibold text-neutral-700">
+                    <select value={nuevoColaborador.rol} onChange={e => setNuevoColaborador({...nuevoColaborador, rol: e.target.value})} className="flex-1 px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none focus:ring-4 focus:ring-b2bHighlight/10 focus:border-b2bHighlight focus:bg-white dark:focus:bg-[#151922] transition-all font-semibold text-neutral-700 dark:text-neutral-350">
                       <option>Cajero</option>
                       <option>Contador</option>
                       <option>Auditor</option>
                     </select>
-                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" className="p-2.5 bg-neutral-900 hover:bg-black text-white rounded-xl shadow-md"><Plus size={16} /></motion.button>
+                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" className="p-2.5 bg-[#00C49F] hover:bg-emerald-500 text-white rounded-xl shadow-md transition-colors"><Plus size={16} /></motion.button>
                   </div>
                 </div>
               </form>
@@ -362,64 +362,62 @@ export default function Configuracion() {
 
           {/* Información General */}
           <div className="space-y-6">
-            <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm">
-              <h3 className="text-lg font-black text-neutral-900 tracking-tight uppercase mb-6">Detalles de Empresa</h3>
+            <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
+              <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight uppercase mb-6 font-title">Detalles de Empresa</h3>
               <div className="space-y-4 text-xs font-semibold">
-                <div className="flex justify-between border-b border-neutral-50 pb-2"><span className="text-neutral-400">Razón Social:</span><span className="text-neutral-800">{miEmpresa?.nombre_comercial || 'Cargando...'}</span></div>
-                <div className="flex justify-between border-b border-neutral-50 pb-2"><span className="text-neutral-400">RFC Fiscal:</span><span className="text-neutral-800 font-mono">{miEmpresa?.rfc || 'Cargando...'}</span></div>
-                <div className="flex justify-between border-b border-neutral-50 pb-2"><span className="text-neutral-400">Plan Actual:</span><span className="text-b2bHighlight font-black uppercase tracking-wider">{planActual}</span></div>
-                <div className="flex justify-between"><span className="text-neutral-400">Estado de Cuenta:</span><span className="text-emerald-500 font-black uppercase">{miEmpresa?.estado_suscripcion || 'Activa'}</span></div>
+                <div className="flex justify-between border-b border-neutral-50 dark:border-neutral-850/60 pb-2"><span className="text-neutral-500">Razón Social:</span><span className="text-neutral-800 dark:text-white">{miEmpresa?.nombre_comercial || 'Cargando...'}</span></div>
+                <div className="flex justify-between border-b border-neutral-50 dark:border-neutral-850/60 pb-2"><span className="text-neutral-500">RFC Fiscal:</span><span className="text-neutral-850 dark:text-white font-mono">{miEmpresa?.rfc || 'Cargando...'}</span></div>
+                <div className="flex justify-between border-b border-neutral-50 dark:border-neutral-850/60 pb-2"><span className="text-neutral-500">Plan Actual:</span><span className="text-b2bHighlight font-black uppercase tracking-wider">{planActual}</span></div>
+                <div className="flex justify-between"><span className="text-neutral-500">Estado de Cuenta:</span><span className="text-emerald-555 dark:text-emerald-500 font-black uppercase">{miEmpresa?.estado_suscripcion || 'Activa'}</span></div>
               </div>
             </div>
 
             {/* Cambio de Contraseña */}
-            <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm">
-              <h3 className="text-sm font-black text-neutral-900 tracking-wider uppercase mb-6 ml-1">Cambiar Contraseña</h3>
+            <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
+              <h3 className="text-sm font-black text-neutral-900 dark:text-white tracking-wider uppercase mb-6 ml-1">Cambiar Contraseña</h3>
               <form onSubmit={cambiarPassword} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Contraseña Actual</label>
-                  <input type="password" value={passwordActual} onChange={e => setPasswordActual(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" placeholder="••••••••" />
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Contraseña Actual</label>
+                  <input type="password" value={passwordActual} onChange={e => setPasswordActual(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white placeholder-neutral-450 dark:placeholder-neutral-500" placeholder="••••••••" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Nueva Contraseña</label>
-                  <input type="password" value={nuevaPassword} onChange={e => setNuevaPassword(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" />
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Nueva Contraseña</label>
+                  <input type="password" value={nuevaPassword} onChange={e => setNuevaPassword(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white placeholder-neutral-450 dark:placeholder-neutral-500" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Confirmar Nueva Contraseña</label>
-                  <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" placeholder="Repetir contraseña" />
+                  <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Confirmar Nueva Contraseña</label>
+                  <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white placeholder-neutral-450 dark:placeholder-neutral-500" placeholder="Repetir contraseña" />
                 </div>
-                <button type="submit" className="w-full bg-neutral-900 hover:bg-black text-white text-xs font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-md">Actualizar Contraseña</button>
+                <button type="submit" className="w-full bg-[#00C49F] hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all shadow-md border border-[#00C49F]/10">Actualizar Contraseña</button>
               </form>
             </div>
           </div>
-
         </motion.div>
       )}
 
-      {/* HISTORIAL DE AUDITORÍA (Visible para todos) */}
       {tabActiva === 'perfil' && auditorias.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="bg-white rounded-3xl border border-neutral-200/60 shadow-premium-sm overflow-hidden">
-          <div className="p-6 border-b border-neutral-100 flex justify-between items-center">
-            <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest">Historial de Auditoría</h3>
-            <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest bg-neutral-100 px-3 py-1.5 rounded-lg border border-neutral-200/50">{auditorias.length} eventos</span>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="bg-white dark:bg-[#151922]/50 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none overflow-hidden">
+          <div className="p-6 border-b border-neutral-100 dark:border-neutral-850/60 flex justify-between items-center">
+            <h3 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-widest font-title">Historial de Auditoría</h3>
+            <span className="text-[9px] font-bold text-neutral-550 dark:text-neutral-400 uppercase tracking-widest bg-neutral-100 dark:bg-neutral-850 px-3 py-1.5 rounded-lg border border-neutral-200/50 dark:border-neutral-800/80">{auditorias.length} eventos</span>
           </div>
           <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-neutral-50/50 sticky top-0">
+                <tr className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest border-b border-neutral-100 dark:border-neutral-850/60 bg-neutral-50/50 dark:bg-[#151922] sticky top-0">
                   <th className="px-6 py-3 font-bold">Fecha</th>
                   <th className="px-6 py-3 font-bold">Acción</th>
                   <th className="px-6 py-3 font-bold">Usuario</th>
                   <th className="px-6 py-3 font-bold">IP</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100/50">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-850/50 text-neutral-600 dark:text-neutral-300">
                 {auditorias.slice(0, 30).map((a) => (
-                  <tr key={a.id} className="hover:bg-neutral-50/30 transition-all">
-                    <td className="px-6 py-3 text-xs text-neutral-500 font-mono whitespace-nowrap">{new Date(a.created_at).toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</td>
-                    <td className="px-6 py-3 text-xs font-bold text-neutral-800">{a.accion?.replace(/_/g, ' ')}</td>
-                    <td className="px-6 py-3 text-xs text-neutral-500">{a.nombre_completo || a.email || '—'}</td>
-                    <td className="px-6 py-3 text-xs text-neutral-400 font-mono">{a.ip_address}</td>
+                  <tr key={a.id} className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-all">
+                    <td className="px-6 py-3 text-xs text-neutral-500 dark:text-neutral-400 font-mono whitespace-nowrap">{new Date(a.created_at).toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</td>
+                    <td className="px-6 py-3 text-xs font-bold text-neutral-800 dark:text-white">{a.accion?.replace(/_/g, ' ')}</td>
+                    <td className="px-6 py-3 text-xs text-neutral-500 dark:text-neutral-400">{a.nombre_completo || a.email || '—'}</td>
+                    <td className="px-6 py-3 text-xs text-neutral-400 dark:text-neutral-500 font-mono">{a.ip_address}</td>
                   </tr>
                 ))}
               </tbody>
@@ -433,32 +431,32 @@ export default function Configuracion() {
       {tabActiva === 'boveda' && (
         <motion.div key="boveda" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={springConfig} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm">
-            <h3 className="text-lg font-black text-neutral-900 tracking-tight uppercase mb-6">Tasas de Pasarelas</h3>
-            <p className="text-xs text-neutral-400 mb-6 font-medium">Define las tasas de comisión reales cobradas por tus proveedores para alimentar el detector de fugas.</p>
+          <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none">
+            <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight uppercase mb-6 font-title">Tasas de Pasarelas</h3>
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-6 font-medium">Define las tasas de comisión reales cobradas por tus proveedores para alimentar el detector de fugas.</p>
             <form onSubmit={guardarBoveda} className="space-y-5">
               <div>
-                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Comisión Clip (%)</label>
-                <input type="number" step="0.01" value={tasaClip} onChange={e => setTasaClip(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" />
+                <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Comisión Clip (%)</label>
+                <input type="number" step="0.01" value={tasaClip} onChange={e => setTasaClip(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Comisión MercadoPago (%)</label>
-                <input type="number" step="0.01" value={tasaMp} onChange={e => setTasaMp(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" />
+                <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Comisión MercadoPago (%)</label>
+                <input type="number" step="0.01" value={tasaMp} onChange={e => setTasaMp(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 ml-1">Retención Fiscal SAT (%)</label>
-                <input type="number" step="0.01" value={tasaSat} onChange={e => setTasaSat(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl outline-none font-semibold text-neutral-800" />
+                <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-405 uppercase tracking-widest mb-2 ml-1">Retención Fiscal SAT (%)</label>
+                <input type="number" step="0.01" value={tasaSat} onChange={e => setTasaSat(e.target.value)} className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-850 dark:text-white" />
               </div>
-              <button type="submit" className="w-full bg-neutral-900 hover:bg-black text-white text-xs font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-md">Guardar Tasas Reales</button>
+              <button type="submit" className="w-full bg-[#00C49F] hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all shadow-md border border-[#00C49F]/10">Guardar Tasas Reales</button>
             </form>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm opacity-60">
-            <h3 className="text-lg font-black text-neutral-900 tracking-tight uppercase mb-6 flex gap-2 items-center"><Lock size={18}/> Credenciales CIEC / API Keys</h3>
-            <p className="text-xs text-neutral-400 mb-6 font-medium">Conexión a SAT CIEC y APIs bancarias. Módulo Enterprise restringido en esta demo.</p>
+          <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none opacity-60">
+            <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight uppercase mb-6 flex gap-2 items-center font-title"><Lock size={18}/> Credenciales CIEC / API Keys</h3>
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-6 font-medium">Conexión a SAT CIEC y APIs bancarias. Módulo Enterprise restringido en esta demo.</p>
             <div className="space-y-4">
-              <input disabled type="password" value="*********" className="w-full px-4 py-2.5 text-xs bg-neutral-100 border border-neutral-200 rounded-xl font-mono text-neutral-400" />
-              <input disabled type="password" value="*********" className="w-full px-4 py-2.5 text-xs bg-neutral-100 border border-neutral-200 rounded-xl font-mono text-neutral-400" />
+              <input disabled type="password" value="*********" className="w-full px-4 py-2.5 text-xs bg-neutral-100 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl font-mono text-neutral-400 dark:text-neutral-500" />
+              <input disabled type="password" value="*********" className="w-full px-4 py-2.5 text-xs bg-neutral-100 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl font-mono text-neutral-400 dark:text-neutral-500" />
             </div>
           </div>
           
@@ -470,47 +468,47 @@ export default function Configuracion() {
         <motion.div key="planes" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={springConfig} className="space-y-10">
           
           {/* Widget de Cuotas de SaaS */}
-          <div className="bg-white p-8 rounded-3xl border border-neutral-200/60 shadow-premium-sm space-y-6">
-            <div className="flex items-center gap-3 pb-4 border-b border-neutral-100">
-              <div className="p-2 bg-emerald-50 text-b2bHighlight rounded-xl"><Award size={16} /></div>
-              <h3 className="text-xs font-black text-neutral-900 uppercase tracking-widest">Consumo del Plan (Facturación Mensual)</h3>
+          <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-neutral-100 dark:border-neutral-800/60">
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-b2bHighlight rounded-xl"><Award size={16} /></div>
+              <h3 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-widest font-title">Consumo del Plan (Facturación Mensual)</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Barra de progreso 1 */}
               <div className="space-y-2">
-                <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-bold text-neutral-800">Transacciones Conciliadas</span>
-                  <span className="font-mono text-neutral-500 font-bold">182 / {planActual.toLowerCase() === 'lite' ? '500' : 'Ilimitado'}</span>
+                <div className="flex justify-between items-baseline text-xs font-semibold">
+                  <span className="text-neutral-850 dark:text-white">Transacciones Conciliadas</span>
+                  <span className="font-mono text-neutral-500 dark:text-neutral-400 font-bold">182 / {planActual.toLowerCase() === 'lite' ? '500' : 'Ilimitado'}</span>
                 </div>
-                <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-neutral-100 dark:bg-neutral-850 rounded-full overflow-hidden">
                   <div className="h-full bg-b2bHighlight rounded-full transition-all duration-500" style={{ width: planActual.toLowerCase() === 'lite' ? '36.4%' : '5%' }}></div>
                 </div>
-                <p className="text-[10px] text-neutral-400 font-medium">Cuota mensual del plan {planActual}</p>
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">Cuota mensual del plan {planActual}</p>
               </div>
 
               {/* Barra de progreso 2 */}
               <div className="space-y-2">
-                <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-bold text-neutral-800">Colaboradores Activos</span>
-                  <span className="font-mono text-neutral-500 font-bold">3 / 5</span>
+                <div className="flex justify-between items-baseline text-xs font-semibold">
+                  <span className="text-neutral-850 dark:text-white">Colaboradores Activos</span>
+                  <span className="font-mono text-neutral-500 dark:text-neutral-400 font-bold">3 / 5</span>
                 </div>
-                <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-neutral-100 dark:bg-neutral-850 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{ width: '60%' }}></div>
                 </div>
-                <p className="text-[10px] text-neutral-400 font-medium">Inquilinos de trabajo activos</p>
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">Inquilinos de trabajo activos</p>
               </div>
 
               {/* Barra de progreso 3 */}
               <div className="space-y-2">
-                <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-bold text-neutral-800">Almacenamiento de Auditoría</span>
-                  <span className="font-mono text-neutral-500 font-bold">4.2 MB / 10 MB</span>
+                <div className="flex justify-between items-baseline text-xs font-semibold">
+                  <span className="text-neutral-850 dark:text-white">Almacenamiento de Auditoría</span>
+                  <span className="font-mono text-neutral-500 dark:text-neutral-400 font-bold">4.2 MB / 10 MB</span>
                 </div>
-                <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-neutral-100 dark:bg-neutral-850 rounded-full overflow-hidden">
                   <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: '42%' }}></div>
                 </div>
-                <p className="text-[10px] text-neutral-400 font-medium">Historial e imágenes persistidas</p>
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">Historial e imágenes persistidas</p>
               </div>
             </div>
           </div>
@@ -518,29 +516,29 @@ export default function Configuracion() {
           {/* Tarjetas de Planes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {planes.map((plan) => (
-              <motion.div whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" }} key={plan.nombre} className={`p-8 rounded-3xl border transition-all flex flex-col ${plan.actual ? 'bg-white border-b2bHighlight shadow-xl shadow-b2bHighlight/5 ring-1 ring-b2bHighlight' : 'bg-neutral-50 border-neutral-200 shadow-sm hover:border-neutral-300'}`}>
+              <motion.div whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" }} key={plan.nombre} className={`p-8 rounded-3xl border transition-all flex flex-col ${plan.actual ? 'bg-white dark:bg-[#151922] border-[#00C49F] dark:border-[#00C49F] shadow-xl dark:shadow-none ring-1 ring-b2bHighlight' : 'bg-neutral-50 dark:bg-[#151922]/50 border-neutral-200 dark:border-neutral-800 shadow-premium-sm dark:shadow-none hover:border-neutral-300 dark:hover:border-neutral-700'}`}>
                 <div className="mb-6">
                   <div className="flex justify-between items-start mb-2">
-                     <span className="text-xs font-black uppercase tracking-widest text-neutral-400">{plan.nombre}</span>
-                     {plan.actual && <span className="px-2 py-0.5 bg-b2bHighlight text-white text-[9px] font-black rounded-full uppercase tracking-tighter">Tu Nivel</span>}
+                     <span className="text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">{plan.nombre}</span>
+                     {plan.actual && <span className="px-2 py-0.5 bg-[#00C49F] text-white text-[9px] font-black rounded-full uppercase tracking-tighter">Tu Nivel</span>}
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-black text-neutral-900 tracking-tighter">{plan.precio}</span>
+                    <span className="text-3xl font-black text-neutral-900 dark:text-white tracking-tighter font-title">{plan.precio}</span>
                     {plan.precio !== 'Custom' && <span className="text-xs font-bold text-neutral-400">/ mes</span>}
                   </div>
-                  <p className="text-[11px] text-neutral-500 mt-2 leading-relaxed">{plan.desc}</p>
+                  <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-2 leading-relaxed">{plan.desc}</p>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {plan.features.map(f => (
-                    <div key={f} className="flex items-center gap-2 text-xs font-medium text-neutral-600"><Check size={12} className={plan.actual ? 'text-b2bHighlight' : 'text-neutral-300'} /> {f}</div>
+                    <div key={f} className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-400"><Check size={12} className={plan.actual ? 'text-b2bHighlight' : 'text-neutral-350'} /> {f}</div>
                   ))}
                 </div>
                 <div className="flex gap-2 w-full mt-auto">
-                  <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => plan.actual ? success('Ya estás disfrutando de los beneficios de este plan.') : abrirCheckout(plan)} className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${plan.actual ? 'bg-b2bHighlight text-white hover:bg-emerald-500 shadow-lg shadow-emerald-100' : 'bg-white border border-neutral-200 text-neutral-400 hover:text-neutral-900 hover:border-neutral-900'}`}>
+                  <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => plan.actual ? success('Ya estás disfrutando de los beneficios de este plan.') : abrirCheckout(plan)} className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${plan.actual ? 'bg-b2bHighlight text-white hover:bg-emerald-500 shadow-lg dark:shadow-none' : 'bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-450 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-900 dark:hover:border-neutral-700'}`}>
                     {plan.actual ? 'Activo' : 'Seleccionar Plan'}
                   </motion.button>
                   {plan.actual && (
-                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setSoporteAbierto(true)} className="px-4 bg-white border border-neutral-200 text-neutral-500 rounded-xl hover:bg-neutral-50 transition-colors">
+                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setSoporteAbierto(true)} className="px-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
                        <HelpCircle size={16} />
                     </motion.button>
                   )}
@@ -550,26 +548,26 @@ export default function Configuracion() {
           </div>
 
           {/* Matriz Técnica de Beneficios */}
-          <div className="bg-white rounded-3xl border border-neutral-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div className="p-6 border-b border-neutral-100 bg-neutral-50/30 font-black text-[10px] text-neutral-400 uppercase tracking-widest">Matriz Técnica de Beneficios</div>
+          <div className="bg-white dark:bg-[#151922]/50 rounded-3xl border border-neutral-200 dark:border-neutral-800/80 overflow-hidden shadow-premium-sm dark:shadow-none hover:shadow-md transition-shadow">
+            <div className="p-6 border-b border-neutral-100 dark:border-neutral-850/60 bg-neutral-50/30 dark:bg-neutral-900/10 font-black text-[10px] text-neutral-500 dark:text-neutral-450 uppercase tracking-widest">Matriz Técnica de Beneficios</div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="text-[9px] font-black text-neutral-400 uppercase tracking-widest border-b border-neutral-100 bg-white">
+                  <tr className="text-[9px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-widest border-b border-neutral-100 dark:border-neutral-850/60 bg-white dark:bg-[#151922]">
                     <th className="px-8 py-4">Característica</th>
                     <th className="px-8 py-4 text-center">Lite</th>
-                    <th className="px-8 py-4 text-center bg-b2bHighlight/5 text-neutral-900">Pro B2B</th>
+                    <th className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10 text-neutral-900 dark:text-white font-bold">Pro B2B</th>
                     <th className="px-8 py-4 text-center">Enterprise</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-50 text-[11px] font-medium text-neutral-600">
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Límite de Transacciones</td><td className="px-8 py-4 text-center">500 / mes</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 font-black text-neutral-900 text-xs">Ilimitado</td><td className="px-8 py-4 text-center italic">Personalizado</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Usuarios Administradores</td><td className="px-8 py-4 text-center">1 Usuario</td><td className="px-8 py-4 text-center bg-b2bHighlight/5">Hasta 5 Usuarios</td><td className="px-8 py-4 text-center font-bold text-neutral-900">Ilimitados</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Retención de Auditoría</td><td className="px-8 py-4 text-center text-neutral-400">7 días</td><td className="px-8 py-4 text-center bg-b2bHighlight/5">180 días</td><td className="px-8 py-4 text-center">Historial Infinito</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Formatos de Exportación</td><td className="px-8 py-4 text-center">Sólo CSV</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 font-bold text-neutral-800">CSV, Excel & PDF</td><td className="px-8 py-4 text-center">Todo + JSON API</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Inteligencia de Datos</td><td className="px-8 py-4 text-center">Básica</td><td className="px-8 py-4 text-center bg-b2bHighlight/5">Avanzada (KPIs)</td><td className="px-8 py-4 text-center font-bold text-indigo-600">IA Predictiva</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Acceso a API B2B</td><td className="px-8 py-4 text-center text-neutral-300">No disponible</td><td className="px-8 py-4 text-center bg-b2bHighlight/5">Sólo Lectura</td><td className="px-8 py-4 text-center font-bold text-neutral-900">Acceso Total</td></tr>
-                  <tr className="hover:bg-neutral-50/50 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900">Soporte Técnico</td><td className="px-8 py-4 text-center text-neutral-400">Email (48h)</td><td className="px-8 py-4 text-center bg-b2bHighlight/5">Chat Prioritario</td><td className="px-8 py-4 text-center font-bold text-indigo-600">Manager 24/7</td></tr>
+                <tbody className="divide-y divide-neutral-100 dark:divide-neutral-850/50 text-[11px] font-medium text-neutral-650 dark:text-neutral-350">
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Límite de Transacciones</td><td className="px-8 py-4 text-center">500 / mes</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10 font-black text-neutral-900 dark:text-white text-xs">Ilimitado</td><td className="px-8 py-4 text-center italic">Personalizado</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Usuarios Administradores</td><td className="px-8 py-4 text-center">1 Usuario</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10">Hasta 5 Usuarios</td><td className="px-8 py-4 text-center font-bold text-neutral-900 dark:text-white">Ilimitados</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Retención de Auditoría</td><td className="px-8 py-4 text-center text-neutral-400 dark:text-neutral-500">7 días</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10">180 días</td><td className="px-8 py-4 text-center">Historial Infinito</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Formatos de Exportación</td><td className="px-8 py-4 text-center">Sólo CSV</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10 font-bold text-neutral-800 dark:text-white">CSV, Excel & PDF</td><td className="px-8 py-4 text-center">Todo + JSON API</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Inteligencia de Datos</td><td className="px-8 py-4 text-center">Básica</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10">Avanzada (KPIs)</td><td className="px-8 py-4 text-center font-bold text-indigo-600">IA Predictiva</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Acceso a API B2B</td><td className="px-8 py-4 text-center text-neutral-350 dark:text-neutral-500">No disponible</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10">Sólo Lectura</td><td className="px-8 py-4 text-center font-bold text-neutral-900 dark:text-white">Acceso Total</td></tr>
+                  <tr className="hover:bg-neutral-50 dark:hover:bg-[#1a2030]/20 transition-colors"><td className="px-8 py-4 font-bold text-neutral-900 dark:text-white">Soporte Técnico</td><td className="px-8 py-4 text-center text-neutral-400 dark:text-neutral-500">Email (48h)</td><td className="px-8 py-4 text-center bg-b2bHighlight/5 dark:bg-b2bHighlight/10 text-neutral-800 dark:text-white font-bold">Chat Prioritario</td><td className="px-8 py-4 text-center font-bold text-indigo-600">Manager 24/7</td></tr>
                 </tbody>
               </table>
             </div>
@@ -580,19 +578,19 @@ export default function Configuracion() {
       {/* PESTAÑA ADMIN */}
       {tabActiva === 'admin' && userRol === 'SuperAdmin' && (
         <motion.div key="admin" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={springConfig} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <motion.button whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" }} onClick={() => navigate('/dashboard')} className="group bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm hover:border-b2bHighlight transition-all text-left relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50/50 rounded-bl-full -mr-10 -mt-10 group-hover:bg-b2bHighlight/10 transition-colors"></div>
-            <div className="p-4 bg-neutral-900 text-white rounded-2xl w-fit mb-6 shadow-xl shadow-neutral-200 group-hover:scale-110 transition-transform"><Server size={28} /></div>
-            <h3 className="text-lg font-bold text-neutral-900">Estado de Red</h3>
-            <p className="text-xs text-neutral-400 mt-1 mb-6">Salud global de la infraestructura.</p>
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-indigo-600">Ver Diagnóstico <ArrowRight size={14} /></div>
+          <motion.button whileHover={{ y: -4 }} onClick={() => navigate('/dashboard')} className="group bg-white dark:bg-[#151922]/50 p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none hover:border-[#00C49F] transition-all text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-bl-full -mr-10 -mt-10 group-hover:bg-[#00C49F]/10 transition-colors"></div>
+            <div className="p-4 bg-neutral-900 dark:bg-[#1c2333] text-white rounded-2xl w-fit mb-6 shadow-xl dark:shadow-none border dark:border-neutral-800 group-hover:scale-110 transition-transform"><Server size={28} /></div>
+            <h3 className="text-lg font-bold text-neutral-900 dark:text-white font-title">Estado de Red</h3>
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1 mb-6">Salud global de la infraestructura.</p>
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#00C49F]">Ver Diagnóstico <ArrowRight size={14} /></div>
           </motion.button>
-          <motion.button whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" }} onClick={() => navigate('/clientes')} className="group bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm hover:border-b2bHighlight transition-all text-left relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50/50 rounded-bl-full -mr-10 -mt-10 group-hover:bg-b2bHighlight/10 transition-colors"></div>
-            <div className="p-4 bg-neutral-900 text-white rounded-2xl w-fit mb-6 shadow-xl shadow-neutral-200 group-hover:scale-110 transition-transform"><Users size={28} /></div>
-            <h3 className="text-lg font-bold text-neutral-900">Gestión de Tenants</h3>
-            <p className="text-xs text-neutral-400 mt-1 mb-6">Administración de clientes maestros.</p>
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-600">Gestionar B2B <ArrowRight size={14} /></div>
+          <motion.button whileHover={{ y: -4 }} onClick={() => navigate('/clientes')} className="group bg-white dark:bg-[#151922]/50 p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none hover:border-[#00C49F] transition-all text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50/50 dark:bg-purple-500/5 rounded-bl-full -mr-10 -mt-10 group-hover:bg-[#00C49F]/10 transition-colors"></div>
+            <div className="p-4 bg-neutral-900 dark:bg-[#1c2333] text-white rounded-2xl w-fit mb-6 shadow-xl dark:shadow-none border dark:border-neutral-800 group-hover:scale-110 transition-transform"><Users size={28} /></div>
+            <h3 className="text-lg font-bold text-neutral-900 dark:text-white font-title">Gestión de Tenants</h3>
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1 mb-6">Administración de clientes maestros.</p>
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#00C49F]">Gestionar B2B <ArrowRight size={14} /></div>
           </motion.button>
         </motion.div>
       )}
