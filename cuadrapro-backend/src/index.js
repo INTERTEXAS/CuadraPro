@@ -23,7 +23,11 @@ const originsPermitidos = [
 ];
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || originsPermitidos.indexOf(origin) !== -1) {
+    if (
+      !origin || 
+      originsPermitidos.indexOf(origin) !== -1 || 
+      origin.endsWith('.vercel.app')
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Acceso denegado por políticas de seguridad CORS de CuadraPro.'));
