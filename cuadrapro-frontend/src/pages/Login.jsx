@@ -55,26 +55,47 @@ export default function Login() {
 
   useEffect(() => {
     /* global google */
-    if (typeof google !== 'undefined') {
-      try {
-        const client = google.accounts.oauth2.initTokenClient({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1017409277028-xxxxxxxx.apps.googleusercontent.com',
-          scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-          callback: async (tokenResponse) => {
-            if (tokenResponse && tokenResponse.access_token) {
-              await loginConGoogleReal(tokenResponse.access_token);
+    let intervalId;
+    let intentos = 0;
+
+    const inicializarCliente = () => {
+      if (typeof google !== 'undefined') {
+        try {
+          const client = google.accounts.oauth2.initTokenClient({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1017409277028-xxxxxxxx.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+            callback: async (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                await loginConGoogleReal(tokenResponse.access_token);
+              }
+            },
+            error_callback: (err) => {
+              console.error('Error en Google OAuth:', err);
+              toastError('Error al iniciar el flujo de Google.');
             }
-          },
-          error_callback: (err) => {
-            console.error('Error en Google OAuth:', err);
-            toastError('Error al iniciar el flujo de Google.');
-          }
-        });
-        setGoogleClient(client);
-      } catch (err) {
-        console.error('Error inicializando Google Client:', err);
+          });
+          setGoogleClient(client);
+          if (intervalId) clearInterval(intervalId);
+        } catch (err) {
+          console.error('Error inicializando Google Client:', err);
+        }
+      } else {
+        intentos += 1;
+        if (intentos > 15 && intervalId) {
+          clearInterval(intervalId);
+        }
       }
+    };
+
+    inicializarCliente();
+
+    if (typeof google === 'undefined') {
+      intervalId = setInterval(inicializarCliente, 500);
     }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [toastError]);
 
   const loginConGoogleReal = async (tokenAcceso) => {
