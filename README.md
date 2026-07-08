@@ -55,30 +55,26 @@ flowchart TD
 
 El sistema se estructura en los siguientes módulos y funcionalidades del cliente:
 
+*   **Acceso (Login Premium):**
+    *   **Google OAuth Real / Simulación:** Selector interactivo inteligente que permite iniciar sesión con cuentas reales de Google o en modo simulado para desarrollo local y pruebas de flujos.
+    *   **Botón de Retorno Elegante:** Botón flotante absolute con desenfoque de fondo glassmorphic en la esquina superior izquierda que permite a las personas regresar de forma elegante a la Landing Page del sitio.
 *   **Inicio (Dashboard Contable):**
     *   **KPIs en Vivo:** Visualización en tiempo real de Balance Total, Efectivo Disponible, Utilidad Neta y Gastos Totales alimentados por la base de datos local.
     *   **Glosario para No-Devs:** Tooltips contextuales interactivos y animados que explican de forma clara y cotidiana el significado de cada métrica.
     *   **Rendimiento Financiero:** Gráfico compuesto interactivo de Recharts que combina ingresos mensuales vs. gastos en barra y área con degradado neón.
     *   **Desglose de Gastos:** Gráfico de tipo dona (`PieChart`) que representa de forma visual las proporciones de comisiones Clip, Mercado Pago y retenciones del SAT.
-
 *   **Directorio B2B (Cuentas y Tenants):**
     *   Gestión y administración maestro-inquilino (*Multi-Tenant*), permitiendo el registro y vinculación de perfiles de clientes y sus correspondientes niveles de cuenta (Básico, Profesional, Enterprise).
-
 *   **Conciliación (Captura y Cargas):**
     *   Módulo de carga y arrastre de estados de cuenta bancarios (CSV) e integraciones SAT. Formulario de arqueo diario de caja e ingreso manual de transacciones con inputs responsivos.
-
 *   **Reportes (Auditoría Fiscal):**
-    *   Módulo interactivo que contrasta la facturación fiscal emitida en el SAT contra el volumen real conciliado en bancos. Historial descargable de auditorías contables listas para exportar a PDF, XLSX y CSV.
-
+    *   Módulo de conciliación que contrasta la facturación fiscal emitida en el SAT contra el volumen real conciliado en bancos. Historial descargable de auditorías contables listas para exportar a PDF, XLSX y CSV.
 *   **Comisiones (Simulador de Pagos):**
     *   Calculadora de dispersión de comisiones. Permite ingresar un monto y calcular al instante el Neto a Recibir restando la tasa del proveedor (*Clip*, *Mercado Pago*, *Stripe*), el IVA y la retención del SAT.
-
 *   **Configuración (Centro de Control):**
     *   Centro de control donde el administrador puede definir comisiones base, consultar bitácoras de auditoría de seguridad y configurar credenciales fiscales CIEC.
-
 *   **Modo Claro / Oscuro Elástico:**
     *   Toggle de tema integrado en el sidebar con animaciones de Framer Motion. Ajuste inteligente que actualiza gráficos y tablas para una lectura perfecta sin contrastes agresivos.
-
 *   **Control de Inactividad y Seguridad:**
     *   Temporizador de inactividad que lanza un modal interactivo con conteo regresivo en tiempo real tras 90 segundos de inactividad contable. Si no hay interacción al finalizar los 30 segundos del conteo, la sesión se cierra automáticamente.
 
@@ -107,14 +103,33 @@ El sistema se estructura en los siguientes módulos y funcionalidades del client
 **Backend (`cuadrapro-backend/.env`):**
 ```env
 PORT=3000
-DATABASE_URL=postgresql://[usuario]:[password]@db.[tudominio].supabase.co:5432/postgres
+DATABASE_URL=postgresql://[usuario]:[password]@aws-1-us-west-2.pooler.supabase.com:5432/postgres?sslmode=require
 JWT_SECRET=tu_firma_secreta_super_segura
+GOOGLE_CLIENT_ID=[id_cliente_google_console]
 ```
 
 **Frontend (`cuadrapro-frontend/.env`):**
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=https://cuadrapro.onrender.com
+VITE_GOOGLE_CLIENT_ID=[id_cliente_google_console]
 ```
+
+---
+
+## Guía de Despliegue en Producción
+
+### 1. Servidor Backend (Render.com)
+*   **Root Directory:** `cuadrapro-backend`
+*   **Build Command:** `npm install`
+*   **Start Command:** `npm start`
+*   **Escape de Contraseñas (Supabase/PostgreSQL):** Si la contraseña de conexión a la base de datos contiene caracteres especiales como `%`, deben codificarse utilizando formato percent-encoding en la variable `DATABASE_URL` (por ejemplo, reemplazar `%` por `%25` y `%%` por `%25%25`), o configurar las credenciales de forma separada utilizando variables individuales para evitar fallos de resolución DNS del parser de URI de Node.
+
+### 2. Cliente Frontend (Vercel)
+*   **Root Directory:** `cuadrapro-frontend`
+*   **Framework Preset:** `Vite`
+*   **Build Command:** `npm run build`
+*   **Output Directory:** `dist`
+*   **Redeploy Obligatorio:** Tras añadir o editar cualquier variable de entorno (`VITE_API_URL` o `VITE_GOOGLE_CLIENT_ID`), es indispensable realizar un *Redeploy* manual del despliegue en Vercel para inyectar los valores en el compilado estático.
 
 ---
 
@@ -143,7 +158,7 @@ CuadraPro/
 │   │   └── index.css              # Directivas Tailwind y layers
 │   ├── tailwind.config.js         # Configuración del tema y colores 'b2b'
 │   └── package.json               # Dependencias Frontend (framer-motion, recharts)
-│
+│   
 └── .gitignore                     # Políticas de exclusión globales
 ```
 
