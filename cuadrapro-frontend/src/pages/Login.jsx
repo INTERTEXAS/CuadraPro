@@ -363,6 +363,19 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-6 font-sans antialiased relative overflow-hidden">
       
+      {/* Botón flotante elegante para regresar al inicio */}
+      <div className="absolute top-6 left-6 z-20">
+        <motion.button
+          whileHover={{ scale: 1.03, x: -2 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-neutral-200/60 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-neutral-800 rounded-full transition-all shadow-premium-sm"
+        >
+          <ArrowLeft size={12} />
+          Regresar al inicio
+        </motion.button>
+      </div>
+      
       {/* Orbes Animados en el Fondo */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-45">
         <motion.div 
