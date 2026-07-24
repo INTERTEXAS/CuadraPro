@@ -1,0 +1,1320 @@
+const fs = require('fs');
+const path = require('path');
+
+const currentDate = new Date().toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const htmlContent = `<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' 
+      xmlns:w='urn:schemas-microsoft-com:office:word' 
+      xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset="utf-8">
+  <title>CuadraPro - Módulo de Pruebas Completo y Humanizado</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page {
+      size: 8.5in 11in;
+      margin: 1.0in 1.0in 1.0in 1.0in;
+      mso-header-margin: .5in;
+      mso-footer-margin: .5in;
+      mso-paper-source: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+      color: #2D3748;
+      line-height: 1.5;
+      font-size: 11pt;
+    }
+
+    /* Portada */
+    .cover-page {
+      page-break-after: always;
+      text-align: center;
+      padding-top: 50px;
+      height: 100%;
+    }
+    
+    .logo-container {
+      margin-bottom: 40px;
+    }
+    
+    .logo-box {
+      display: inline-block;
+      background-color: #0B0F19;
+      padding: 15px 30px;
+      border-radius: 8px;
+      border: 2px solid #00C49F;
+    }
+    
+    .logo-text {
+      color: #ffffff;
+      font-size: 28pt;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    
+    .logo-accent {
+      color: #00C49F;
+    }
+
+    .project-subtitle {
+      font-size: 14pt;
+      color: #718096;
+      margin-top: 10px;
+      margin-bottom: 80px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .document-title {
+      font-size: 26pt;
+      font-weight: bold;
+      color: #1A202C;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .document-subtitle {
+      font-size: 16pt;
+      color: #00C49F;
+      margin-bottom: 120px;
+      font-style: italic;
+    }
+
+    .metadata-table {
+      width: 80%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      margin-top: 100px;
+    }
+
+    .metadata-table td {
+      padding: 8px;
+      border: none;
+      font-size: 10pt;
+      color: #4A5568;
+    }
+
+    .metadata-label {
+      font-weight: bold;
+      text-align: right;
+      width: 45%;
+    }
+
+    .metadata-value {
+      text-align: left;
+      width: 55%;
+    }
+
+    /* Estilos Generales de Contenido */
+    h1 {
+      page-break-before: always;
+      color: #0B0F19;
+      font-size: 18pt;
+      border-bottom: 2px solid #00C49F;
+      padding-bottom: 6px;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    h1.no-break {
+      page-break-before: avoid !important;
+    }
+
+    h2 {
+      color: #0F2C59;
+      font-size: 14pt;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 4px;
+    }
+
+    h3 {
+      color: #00C49F;
+      font-size: 12pt;
+      margin-top: 15px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-top: 5px;
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    code {
+      font-family: Consolas, 'Courier New', Courier, monospace;
+      background-color: #EDF2F7;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 9.5pt;
+      color: #2C5282;
+    }
+
+    /* Tablas de Casos de Prueba */
+    .test-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 25px;
+      font-size: 9.5pt;
+    }
+
+    .test-table th {
+      background-color: #151922;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #2D3748;
+    }
+
+    .test-table td {
+      padding: 8px 10px;
+      border: 1px solid #CBD5E0;
+      vertical-align: top;
+    }
+
+    .test-table tr:nth-child(even) {
+      background-color: #F7FAFC;
+    }
+
+    .label-cell {
+      font-weight: bold;
+      background-color: #EDF2F7;
+      width: 25%;
+    }
+
+    .content-cell {
+      width: 75%;
+    }
+
+    /* Cajas de llamada (Callouts) */
+    .callout {
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-left: 4px solid #3182CE;
+      background-color: #EBF8FF;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout-warning {
+      border-left-color: #DD6B20;
+      background-color: #FFFAF0;
+    }
+
+    .callout-success {
+      border-left-color: #38A169;
+      background-color: #F0FFF4;
+    }
+
+    .callout-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #2D3748;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 8pt;
+      font-weight: bold;
+      border-radius: 3px;
+      color: #ffffff;
+    }
+
+    .badge-critical { background-color: #E53E3E; }
+    .badge-high { background-color: #DD6B20; }
+    .badge-medium { background-color: #D69E2E; }
+    .badge-low { background-color: #3182CE; }
+
+    /* Saltos de página manuales */
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PORTADA ==================== -->
+  <div class="cover-page">
+    <div class="logo-container">
+      <div class="logo-box">
+        <span class="logo-text">Cuadra<span class="logo-accent">Pro</span></span>
+      </div>
+      <div class="project-subtitle">Bóveda de Conciliación Financiera B2B</div>
+    </div>
+    
+    <div class="document-title">
+      MÓDULO DE PRUEBAS INTEGRAL Y MANUAL DE QA
+    </div>
+    <div class="document-subtitle">
+      Plan de Pruebas Humanizado para la Validación Funcional, UX/UI, Multitenancy y Seguridad Criptográfica
+    </div>
+    
+    <table class="metadata-table">
+      <tr>
+        <td class="metadata-label">Preparado para:</td>
+        <td class="metadata-value">Equipo de Desarrollo y Operaciones CuadraPro</td>
+      </tr>
+      <tr>
+        <td class="metadata-label">Autor:</td>
+        <td class="metadata-value">Ingeniero de Calidad y Arquitecto QA Senior</td>
+      </tr>
+      <tr>
+        <td class="metadata-label">Versión del Documento:</td>
+        <td class="metadata-value">1.0.0</td>
+      </tr>
+      <tr>
+        <td class="metadata-label">Estado del Proyecto:</td>
+        <td class="metadata-value">Listo para Fase de QA Integral</td>
+      </tr>
+      <tr>
+        <td class="metadata-label">Fecha de Generación:</td>
+        <td class="metadata-value">${currentDate}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ==================== SECCIÓN 1: INTRODUCCIÓN Y ENFOQUE ==================== -->
+  <h1>1. INTRODUCCIÓN Y ENFOQUE HUMANIZADO</h1>
+  
+  <h2>1.1 Propósito de este Documento</h2>
+  <p>
+    Este documento define el <strong>Módulo de Pruebas de Todo el Sistema</strong> (también denominado Plan de Pruebas de QA) para <strong>CuadraPro</strong>, la bóveda de conciliación financiera multi-inquilino (SaaS). El objetivo es estructurar, guiar y documentar el proceso de aseguramiento de calidad mediante un <strong>enfoque humanizado</strong>. 
+  </p>
+  <p>
+    A diferencia de los enfoques de prueba puramente automatizados o de caja negra rígida, un plan de pruebas humanizado se enfoca en comprender los estados de ánimo, las necesidades reales, los posibles momentos de frustración y el flujo cognitivo de las personas que interactuarán con CuadraPro día a día (principalmente directores financieros, contadores corporativos y administradores de inquilinos).
+  </p>
+
+  <h2>1.2 Alcance del Sistema</h2>
+  <p>
+    Las pruebas definidas en este documento cubren todo el flujo del ecosistema de CuadraPro, abarcando desde las interfaces del cliente frontend (React + Vite + Tailwind CSS) hasta las lógicas de negocio, validaciones criptográficas y middleware de seguridad en el backend (Node.js + Express + PostgreSQL).
+  </p>
+  
+  <div class="callout callout-success">
+    <div class="callout-title">Áreas Core Bajo Prueba</div>
+    <ul>
+      <li><strong>Acceso y Sesiones:</strong> Integración y simulación de Google OAuth, controles elásticos de UI y el sistema preventivo de cierre de sesión por inactividad.</li>
+      <li><strong>Dashboard y Visualizaciones:</strong> Consistencia de métricas, gráficos Recharts y los tooltips explicativos orientados a profesionales no técnicos.</li>
+      <li><strong>Gestión Multi-Tenant B2B:</strong> Aislamiento de esquemas, directorios de clientes y cambio de planes (Básico, Profesional, Enterprise).</li>
+      <li><strong>Mecanismo de Conciliación:</strong> Procesamiento de CSV de cuentas bancarias y flujo de captura de arqueos.</li>
+      <li><strong>Auditoría Fiscal y Reportes:</strong> Contraste contra el SAT y exportación física (PDF, XLSX, CSV).</li>
+      <li><strong>Simulaciones y Cálculos:</strong> Exactitud matemática en el cálculo de tasas y retenciones impositivas.</li>
+      <li><strong>Seguridad Criptográfica:</strong> Cabeceras Helmet, validación estricta Zod y cifrado simétrico AES-256-GCM en base de datos.</li>
+    </ul>
+  </div>
+
+  <h2>1.3 Filosofía del Testeo Humanizado (Human-Centered QA)</h2>
+  <p>
+    En CuadraPro, entendemos que el software financiero maneja la información más sensible de un negocio. Un error contable, una interfaz confusa o un temporizador de inactividad mal diseñado no solo representan un bug de software, sino que causan estrés laboral, pérdidas de tiempo y fatiga en el usuario. Por ello, nuestros casos de prueba no solo validan que la API devuelva "status 200 OK", sino que también evalúan:
+  </p>
+  <ul>
+    <li><strong>La carga cognitiva del usuario:</strong> ¿El flujo de conciliación es fácil de recordar y ejecutar bajo presión de cierre de mes?</li>
+    <li><strong>La claridad contextual:</strong> ¿Los tooltips realmente explican las métricas de forma que un administrador o dueño de negocio no-dev entienda el significado de "Utilidad Neta vs. Flujo de Caja"?</li>
+    <li><strong>La tranquilidad visual:</strong> ¿El modo oscuro y el modo claro alivian la fatiga ocular durante largas jornadas de auditoría?</li>
+    <li><strong>La tolerancia a fallos:</strong> ¿Los mensajes de error guían al usuario para corregir el archivo CSV, o solo muestran un log técnico ininteligible?</li>
+  </ul>
+
+  <!-- ==================== SECCIÓN 2: ESTRATEGIA DE PRUEBAS ==================== -->
+  <h1>2. ESTRATEGIA Y ENTORNO DE PRUEBAS</h1>
+  
+  <h2>2.1 Tipos de Pruebas a Ejecutar</h2>
+  <p>
+    Para asegurar la calidad integral sin perder el toque humano, se ha dispuesto una matriz de pruebas que complementa el testeo unitario con el análisis de experiencia real:
+  </p>
+  <ol>
+    <li><strong>Pruebas Funcionales de Extremo a Extremo (E2E):</strong> Verificación de flujos completos, por ejemplo, cargar un CSV de banco, cruzarlo con facturas SAT, ver la desviación en el Dashboard y exportar el reporte final.</li>
+    <li><strong>Pruebas de Usabilidad y UX Elástica:</strong> Validación de la adaptabilidad de la UI, fluidez en las transiciones de Framer Motion, legibilidad de colores y el toggle de temas.</li>
+    <li><strong>Pruebas de Robustez Contable (Exactitud Matemática):</strong> Validación de que los redondeos financieros del backend y el frontend coincidan exactamente hasta los centavos en el simulador de dispersión.</li>
+    <li><strong>Pruebas de Seguridad en Capa del Cliente:</strong> Simulación de intentos de acceso no autorizados, expiración de tokens, inyección de scripts a través de cargas de archivos y verificación de inactividad física.</li>
+    <li><strong>Pruebas Criptográficas y de Base de Datos:</strong> Comprobación de que las credenciales CIEC y tokens guardados en PostgreSQL se encuentren cifrados y sean ilegibles sin la clave maestra AES.</li>
+  </ol>
+
+  <h2>2.2 Datos de Prueba y Configuración</h2>
+  <p>
+    Los entornos de prueba deben configurarse con sets de datos realistas pero ficticios para evitar la manipulación de información fiscal real durante la validación:
+  </p>
+  <ul>
+    <li><strong>Inquilinos de Prueba (Tenants):</strong> Tres empresas creadas con configuraciones distintas (Empresa A - Plan Básico, Empresa B - Plan Profesional, Empresa C - Plan Enterprise).</li>
+    <li><strong>Archivo CSV Bancario de Pruebas:</strong> Archivo estructurado con 100 transacciones simuladas, incluyendo depósitos conciliables, cargos por comisiones, transacciones duplicadas y formatos corruptos para pruebas de tolerancia.</li>
+    <li><strong>Facturas SAT de Pruebas:</strong> XMLs de facturación con folios fiscales válidos e importes configurados para coincidir (y otros para fallar deliberadamente) con el CSV bancario.</li>
+    <li><strong>Usuarios del Simulador:</strong> Perfiles con permisos de Administrador, Contador y Consultor (Solo Lectura) para probar la matriz de accesos.</li>
+  </ul>
+
+  <!-- ==================== SECCIÓN 3: CASOS DE PRUEBA DETALLADOS ==================== -->
+  <h1>3. CASOS DE PRUEBA DETALLADOS (HUMANIZADOS)</h1>
+  <p>
+    A continuación, se presenta la suite detallada de casos de prueba del sistema. Cada caso cuenta con su respectiva narrativa de usuario, pasos minuciosos y criterios de validación de calidad.
+  </p>
+
+  <!-- CASO 1 -->
+  <h2>3.1 Módulo 1: Acceso, Sesiones y Seguridad Perimetral</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-ACC-01: Login Seguro mediante Google OAuth (Real & Simulación)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-ACC-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-critical">CRÍTICA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> usuario corporativo de CuadraPro,<br>
+          <strong>quiero</strong> poder autenticarme de forma segura e inmediata usando mi cuenta de Google Workspace sin tener que recordar otra contraseña más,<br>
+          <strong>para</strong> poder ingresar directo a la consola contable de mi empresa con total confianza de que mis datos están protegidos.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. La aplicación web está desplegada y accesible en la Landing Page.<br>
+          2. El usuario tiene una cuenta de Google Workspace activa.<br>
+          3. Las variables de entorno de Google Client ID están configuradas en frontend y backend.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Navega a la Landing Page de CuadraPro.<br>
+          2. Haz clic en el botón de <strong>"Iniciar Sesión / Acceder"</strong> en la barra superior. Nota cómo la UI te redirige fluidamente a la pantalla de login premium con un fondo glassmorphic oscuro.<br>
+          3. En la pantalla de login, localiza el componente selector interactivo que permite elegir entre <strong>"OAuth Real"</strong> y <strong>"Modo Simulado"</strong>. Selecciona "OAuth Real".<br>
+          4. Haz clic en el botón con la marca oficial de Google. Observa que se abre la ventana emergente nativa de Google con el branding adecuado de la aplicación.<br>
+          5. Selecciona tu cuenta de Google e introduce tus credenciales.<br>
+          6. Espera la confirmación de autenticación y observa el efecto de carga antes de entrar al Dashboard de tu tenant.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El sistema debe validar el token de Google en el backend, buscar a qué Tenant pertenece el correo, crear la sesión segura, inyectar el JWT en las cabeceras HTTP y redirigir al usuario al Dashboard. La transición debe ser suave, sin parpadeos en blanco de la pantalla.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Seguridad:</strong> El JWT generado no debe exponer información sensible (como contraseñas o claves del SAT) en su payload.<br>
+          - <strong>UX:</strong> Si el inicio de sesión falla por red, debe mostrar un modal explicativo invitando amigablemente a "Reintentar conexión" en lugar de congelar la pantalla.<br>
+          - <strong>UI:</strong> El selector de simulación debe quedar oculto en entornos de producción reales (según variable <code>NODE_ENV</code>).
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 2 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-ACC-02: Control de Inactividad Contable con Cuenta Regresiva</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-ACC-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-high">ALTA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> oficial de seguridad de la empresa,<br>
+          <strong>quiero</strong> que la plataforma cierre la sesión de forma automática si un contador deja su computadora encendida y desatendida,<br>
+          <strong>para</strong> evitar que personas no autorizadas vean el balance de ingresos o alteren las conciliaciones del mes.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario ha iniciado sesión correctamente y se encuentra en el Dashboard contable.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Entra al Dashboard y deja de mover el mouse o presionar teclas por completo.<br>
+          2. Monitorea el tiempo. Al transcurrir exactamente <strong>90 segundos</strong> de inactividad contable, observa la aparición de un modal interactivo superpuesto con desenfoque de fondo.<br>
+          3. Lee el mensaje del modal. Debe advertir con tono profesional y urgente pero amable: <i>"¿Sigues ahí? Por seguridad de tus datos contables, tu sesión se cerrará en X segundos"</i>.<br>
+          4. Verifica que el contador numérico en pantalla disminuya segundo a segundo (desde 30 segundos hasta 0).<br>
+          5. <strong>Escenario A (Retorno):</strong> Antes de que llegue a 0, mueve el mouse o presiona el botón "Seguir trabajando". Verifica que el modal desaparezca instantáneamente y el temporizador se reinicie a los 90 segundos.<br>
+          6. <strong>Escenario B (Cierre):</strong> Deja correr el contador a 0 sin tocar nada. Verifica que seas redirigido automáticamente a la pantalla de login con un mensaje explicativo: <i>"Sesión finalizada por inactividad. Cuidamos de tus finanzas."</i>
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El modal interactivo se despliega a los 90 segundos. A los 120 segundos totales de inactividad, el token JWT local es destruido en el storage del navegador y el backend invalida la sesión, enviando al usuario a la página de login de forma segura.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Empatía de UI:</strong> El modal de conteo regresivo no debe interrumpir abruptamente el trabajo si el usuario solo está leyendo un reporte largo; por tanto, cualquier scroll en la página debe considerarse actividad válida para reiniciar el timer.<br>
+          - <strong>Seguridad:</strong> Al dar clic atrás en el navegador tras ser deslogueado, no se debe poder ver información cacheada del Dashboard.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 3 -->
+  <div class="page-break"></div>
+  <h2>3.2 Módulo 2: Inicio y Dashboard Contable Interactivo</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-DSH-01: KPIs Financieros en Vivo y Glosario para No-Devs/No-Contadores</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-DSH-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-high">ALTA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> dueño de una PYME no especializado en contabilidad,<br>
+          <strong>quiero</strong> que las métricas financieras clave tengan explicaciones sencillas al pasar el mouse por encima,<br>
+          <strong>para</strong> poder entender la salud real de mi negocio (como la diferencia entre efectivo y utilidad) sin necesidad de llamar a mi contador externo todo el tiempo.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está autenticado y en el Dashboard.<br>
+          2. Existen registros financieros en la base de datos que alimentan los KPIs de Balance Total, Efectivo Disponible, Utilidad Neta y Gastos Totales.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Observa los cuatro paneles superiores de KPIs principales. Revisa que carguen de inmediato y los números tengan formato de moneda localizado (ej. $128,450.00 MXN).<br>
+          2. Localiza el icono de ayuda o signo de interrogación discreto junto al título de <strong>"Utilidad Neta"</strong>.<br>
+          3. Coloca el cursor sobre el icono. Verifica que se despliegue un tooltip contextual animado con una breve explicación en lenguaje cotidiano (ej: <i>"Es lo que realmente te queda de ganancia después de restar todos los gastos, comisiones bancarias e impuestos del mes."</i>).<br>
+          4. Haz lo mismo con el indicador de <strong>"Efectivo Disponible"</strong> y verifica que el tooltip aclare que no es lo mismo que utilidad porque incluye facturas pendientes de cobro.<br>
+          5. Retira el mouse del icono y comprueba que el tooltip se oculte suavemente sin dejar rastro ni deformar el layout.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          Los tooltips descriptivos se muestran y se ocultan suavemente utilizando transiciones fluidas de CSS o Framer Motion. El contenido explicativo debe estar escrito en lenguaje natural, evitando tecnicismos informáticos y aclarando tecnicismos contables básicos.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Accesibilidad:</strong> Los tooltips deben ser activables mediante el teclado (tecla Tab) para usuarios con capacidades diferentes.<br>
+          - <strong>Estética:</strong> El color del tooltip debe contrastar perfectamente con el tema (claro/oscuro) y no salirse de los límites de la pantalla del navegador en dispositivos móviles.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 4 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-DSH-02: Gráficos de Rendimiento Interactivos en Temas Elásticos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-DSH-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-medium">MEDIA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> analista de datos contables,<br>
+          <strong>quiero</strong> que los gráficos financieros muestren detalles dinámicos al pasar el cursor sobre las barras de ingresos/gastos,<br>
+          <strong>para</strong> poder comparar visualmente tendencias mensuales sin necesidad de descargar una tabla de datos completa.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está en el Dashboard.<br>
+          2. Hay datos de facturación e ingresos cargados de los últimos 6 meses.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Desplázate hacia abajo hasta el gráfico principal de <strong>Rendimiento Financiero</strong> (gráfico compuesto de barras y líneas).<br>
+          2. Pasa el cursor por encima de una barra mensual específica (ej. Junio). Comprueba que se active una línea guía vertical y aparezca un recuadro flotante con el desglose exacto de ese mes (Ingresos, Gastos y Margen de Utilidad).<br>
+          3. Observa los colores neón del gráfico: en modo oscuro, los degradados deben ser vibrantes pero elegantes; en modo claro, deben suavizarse para no lastimar la vista.<br>
+          4. Cambia el tema de la aplicación mediante el toggle de la barra lateral. Observa que el gráfico se redibuje con la nueva paleta de colores de forma inmediata sin perder el estado de los datos ni la interactividad.<br>
+          5. Revisa el gráfico de tipo dona (PieChart) de desglose de gastos y verifica que el cálculo de porcentajes coincida visualmente con la leyenda contable de comisiones del SAT, Clip y Stripe.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          Los gráficos basados en Recharts se adaptan dinámicamente al redimensionamiento y al cambio de tema del sistema. Las leyendas e informaciones contextuales de las barras/áreas cargan valores precisos obtenidos de la base de datos.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Rendimiento:</strong> La animación al renderizar o alternar entre meses en el gráfico no debe congelar el scroll de la página (tasa de refresco constante de 60fps).<br>
+          - <strong>Fidelidad Visual:</strong> Ninguna etiqueta de texto en el eje X o Y del gráfico debe cortarse o sobreponerse con otra, incluso en pantallas de computadoras portátiles pequeñas.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 5 -->
+  <div class="page-break"></div>
+  <h2>3.3 Módulo 3: Directorio B2B y Gestión Multi-Tenant</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-TEN-01: Aislamiento Estricto y Asignación de Niveles de Cuenta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-TEN-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-critical">CRÍTICA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> administrador general de CuadraPro,<br>
+          <strong>quiero</strong> garantizar que los datos financieros de un Tenant (inquilino) no puedan ser vistos ni modificados por ningún otro Tenant de la plataforma,<br>
+          <strong>para</strong> evitar fugas de información que destruyan la reputación del software y violen acuerdos legales de confidencialidad.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. Se cuenta con dos Tenants creados en base de datos: Tenant Alpha y Tenant Beta.<br>
+          2. Ambos Tenants tienen registros y estados de cuenta únicos cargados.<br>
+          3. El tester tiene credenciales de acceso para usuarios de ambos perfiles.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Inicia sesión como usuario administrador de <strong>Tenant Alpha</strong>.<br>
+          2. Carga un estado de cuenta bancario exclusivo y guárdalo. Anota el saldo final de la cuenta.<br>
+          3. Abre una pestaña en modo incógnito (o cierra sesión) e ingresa como administrador de <strong>Tenant Beta</strong>.<br>
+          4. Navega por las secciones de Dashboard, Reportes e Historial de Capturas. Confirma minuciosamente que no aparezca rastro del saldo ni del nombre de Tenant Alpha.<br>
+          5. <strong>Intento de Hackeo Manual:</strong> Mediante herramientas de desarrollo de red en el navegador, copia una petición de actualización de datos de Tenant Beta, modifica manualmente el <code>tenant_id</code> en el cuerpo de la petición por el ID de Tenant Alpha, y envíala al servidor.<br>
+          6. Analiza la respuesta del backend ante la petición forzada.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El backend debe interceptar la solicitud y rechazarla con un error estricto de autorización (HTTP 403 Forbidden o 401 Unauthorized), gracias a que el middleware de sesión del backend valida que el <code>tenant_id</code> en el token de la sesión coincida obligatoriamente con el recurso solicitado, ignorando cualquier ID enviado en el body.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Seguridad Extrema:</strong> Ningún endpoint del backend debe procesar peticiones sin validar la pertenencia del Tenant a través del token JWT firmado criptográficamente.<br>
+          - <strong>Feedback Humanizado:</strong> Al denegar el acceso, el backend no debe filtrar nombres de variables de base de datos ni consultas SQL en el mensaje de error del frontend.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 6 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-TEN-02: Gestión de Planes y Limitaciones (Básico, Profesional, Enterprise)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-TEN-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-medium">MEDIA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> usuario con plan Básico,<br>
+          <strong>quiero</strong> recibir un aviso claro y motivador cuando intente usar funciones avanzadas (como descargas masivas en XLSX o integraciones directas SAT),<br>
+          <strong>para</strong> saber exactamente qué beneficios obtendré si decido actualizar a los planes Profesional o Enterprise.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario tiene asignado un plan de nivel "Básico" en su Tenant.<br>
+          2. Las funciones de descarga en formatos especializados (ej. XLSX) están restringidas para este nivel.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Inicia sesión con la cuenta de plan Básico y ve al módulo de <strong>Reportes</strong>.<br>
+          2. Observa el botón de exportación a PDF (debe estar habilitado) y el botón de <strong>Exportar a XLSX (Excel)</strong>. Nota cómo este último muestra un icono de candado elegante o está visualmente diferenciado.<br>
+          3. Haz clic en el botón de exportación restringida (XLSX).<br>
+          4. Verifica la aparición de un modal pop-up con diseño premium. El modal debe explicar amigablemente los límites del plan actual e ilustrar las ventajas del plan "Profesional" (p. ej., descargas instantáneas y reportes consolidados multinivel).<br>
+          5. Verifica que haya un botón directo para contactar al equipo de ventas o realizar el upgrade, y un botón "Cerrar" para seguir trabajando normalmente sin fricciones.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El sistema intercepta la petición en el frontend, bloquea la acción de descarga, y muestra un modal informativo bien diseñado, sin arrojar errores por consola del navegador ni provocar inconsistencias de interfaz.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Comunicación Empática:</strong> El mensaje de restricción no debe sonar punitivo o regañón (evitar textos como <i>"Acceso denegado: no tiene privilegios"</i>), sino transformarse en una invitación atractiva y transparente para potenciar el negocio (ej. <i>"Desbloquea el poder del análisis masivo en Excel con el plan Profesional"</i>).
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 7 -->
+  <div class="page-break"></div>
+  <h2>3.4 Módulo 4: Conciliación (Capturas, Cargas y Arqueos)</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-CON-01: Carga por Arrastre (Drag & Drop) de Estados de Cuenta CSV</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-CON-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-high">ALTA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> auxiliar contable que procesa 30 estados de cuenta al día,<br>
+          <strong>quiero</strong> simplemente arrastrar mis archivos CSV directamente al portal y ver una retroalimentación visual clara de la carga,<br>
+          <strong>para</strong> ahorrar clics repetitivos y confirmar de inmediato que mis archivos son válidos y están siendo procesados.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está en la página de <strong>Captura</strong>.<br>
+          2. Se tiene un archivo CSV estructurado correcto, un archivo con formato erróneo (columnas faltantes) y un archivo ejecutable malicioso de prueba (ej: <code>script.exe</code>).
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. En la zona de carga de archivos, arrastra el archivo CSV correcto. Observa cómo el contenedor cambia de color (efecto hover esmeralda) al sostener el archivo encima.<br>
+          2. Suelta el archivo. Verifica que aparezca una barra de progreso animada con un indicador de porcentaje de subida y el nombre del archivo legible.<br>
+          3. Una vez subido, verifica que la tabla de transacciones de abajo se actualice dinámicamente con los datos del CSV y muestre un mensaje de éxito: <i>"Carga completada: se identificaron X movimientos bancarios."</i><br>
+          4. <strong>Prueba de Error de Formato:</strong> Arrastra el archivo CSV con formato erróneo. Verifica que la interfaz muestre una alerta en tono naranja con un texto humanizado que explique qué columnas faltan en lugar de colapsar la vista.<br>
+          5. <strong>Prueba de Seguridad de Archivos:</strong> Intenta arrastrar el archivo malicioso <code>.exe</code> o un <code>.jpg</code>.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El cargador frontend debe rechazar inmediatamente los formatos que no sean estrictamente <code>.csv</code> o <code>.xml</code> mediante validación por tipo MIME en el cliente, mostrando un mensaje de advertencia. En el caso del CSV dañado, el backend debe capturar el error de parsing e informar amigablemente sobre la inconsistencia del archivo.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Tolerancia:</strong> Si el usuario se equivoca de archivo, el sistema debe permitir descartarlo con un solo clic en un botón de "Eliminar / Limpiar" y restablecer el dropzone a su estado inicial de forma interactiva.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 8 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-CON-02: Formulario de Arqueo Diario e Ingreso Manual Responsivo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-CON-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-medium">MEDIA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> encargado de caja de una sucursal física,<br>
+          <strong>quiero</strong> registrar el arqueo de efectivo diario desde mi tableta o teléfono celular al final del turno,<br>
+          <strong>para</strong> poder capturar las ventas en efectivo del día sin tener que ir hasta la oficina administrativa a usar una PC.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está en la página de <strong>Captura</strong> en un dispositivo móvil o simulador de pantalla pequeña (ancho de pantalla: 375px).
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Abre el menú lateral y ve a "Captura". Nota cómo la barra lateral se oculta inteligentemente en un botón tipo hamburguesa para dar espacio al contenido.<br>
+          2. Selecciona la opción de <strong>"Ingreso Manual (Arqueo)"</strong>.<br>
+          3. Completa los campos: Fecha, Monto en Efectivo, Diferencia en Caja y Comentarios. Verifica que al presionar cada input, el teclado móvil adecuado se active (ej. teclado numérico para el Monto).<br>
+          4. Verifica que los campos tengan etiquetas claras y explicaciones de qué ingresar.<br>
+          5. Presiona el botón de <strong>"Guardar Arqueo"</strong>. Observa el estado de carga en el botón (un spinner sutil) que te indica que se está transmitiendo la información, y comprueba el mensaje de éxito táctil al terminar.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          La pantalla es 100% responsiva. La información ingresada se envía mediante JSON al backend, donde se valida que los tipos de datos sean correctos con esquemas Zod. Al guardarse exitosamente, el formulario se limpia y se notifica al usuario en pantalla con una animación sutil.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>UX Móvil:</strong> Los botones deben tener un tamaño de área táctil mínimo de 44x44 píxeles para evitar clics accidentales en pantallas táctiles.<br>
+          - <strong>Validación Visual en Caliente:</strong> Si el tester ingresa un monto negativo o vacío, el campo debe pintarse de rojo suave en tiempo real y mostrar el texto descriptivo del error debajo del input inmediatamente.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 9 -->
+  <div class="page-break"></div>
+  <h2>3.5 Módulo 5: Reportes de Auditoría Fiscal</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-REP-01: Conciliación Cruzada: Facturación SAT vs Depósitos Reales</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-REP-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-high">ALTA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> contralor financiero de la corporación,<br>
+          <strong>quiero</strong> contrastar automáticamente las facturas registradas en el SAT contra lo depositado en los bancos,<br>
+          <strong>para</strong> detectar de inmediato discrepancias fiscales antes de que se conviertan en multas o auditorías gubernamentales.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. Se cuenta con archivos XML de facturas del SAT del mes corriente cargados en el sistema.<br>
+          2. Se cuenta con el historial de depósitos bancarios del mismo periodo registrado.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Ingresa a la sección de <strong>Reportes (Auditoría Fiscal)</strong>.<br>
+          2. Selecciona el rango de fechas para el mes a auditar y presiona <strong>"Iniciar Cruce de Datos"</strong>.<br>
+          3. Observa cómo el motor procesa la información y despliega un resumen dividido en tres columnas claras: <i>Conciliados Perfectamente</i>, <i>Facturado sin Depósito</i> y <i>Depósitos sin Factura</i>.<br>
+          4. Haz clic en una discrepancia específica del listado de "Depósitos sin Factura". Verifica que el sistema te muestre el ID de la transacción bancaria, la fecha y el banco de origen, con una recomendación humanizada sobre qué hacer (ej: <i>"Se recomienda verificar si esta transacción corresponde a una transferencia entre cuentas propias o si hace falta emitir la factura del cliente"</i>).
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El sistema contrasta con precisión decimal los importes de los XML de facturación del SAT contra las entradas del banco. Las diferencias se categorizan y se proveen consejos inteligentes y amigables basados en la naturaleza contable de la discrepancia.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Precisión:</strong> El motor no debe redondear hacia arriba o hacia abajo en diferencias inferiores a 0.05 centavos para evitar falsos positivos de conciliación.<br>
+          - <strong>Comprensión:</strong> Las alertas de discrepancias graves deben pintarse con un fondo amarillo cálido en lugar de un rojo alarmante, sugiriendo de forma constructiva los pasos correctivos a realizar.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 10 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-REP-02: Exportación de Reportes Financieros (PDF, XLSX, CSV)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-REP-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-medium">MEDIA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> director de finanzas,<br>
+          <strong>quiero</strong> descargar un reporte limpio y formal en formato PDF de la conciliación del mes,<br>
+          <strong>para</strong> poder adjuntarlo en la presentación de la junta directiva del mes de manera inmediata y sin retoques de diseño.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario tiene un reporte de conciliación cargado en pantalla con datos de balance y gráficas.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. En la vista de Reportes, haz clic en el botón con icono de descarga y selecciona <strong>"Descargar PDF"</strong>.<br>
+          2. Espera a que termine la generación en segundo plano y se descargue el archivo. Abre el archivo PDF descargado.<br>
+          3. Revisa la estructura estética del documento PDF: la portada del reporte debe mostrar el logo y datos del Tenant, las fuentes deben ser corporativas y legibles, y las gráficas deben renderizarse con alta resolución, sin distorsiones.<br>
+          4. Vuelve al sistema y repite el proceso seleccionando <strong>"Descargar XLSX"</strong>.<br>
+          5. Abre el archivo en Excel. Confirma que los datos no estén guardados como texto (lo cual imposibilita usar fórmulas), sino como valores numéricos de moneda bien formateados.<br>
+          6. Realiza una descarga en <strong>CSV</strong> y comprueba que se use el delimitador adecuado (coma o punto y coma) según el estándar local del sistema contable.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          Los tres formatos se exportan correctamente desde el servidor o cliente. El PDF conserva el diseño premium alineado con la marca CuadraPro. El XLSX contiene datos en bruto tipados como número/moneda para facilitar auditorías numéricas avanzadas.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Fidelidad del PDF:</strong> Si el reporte excede una página, el corte de hoja no debe realizarse a la mitad de una fila de tabla o sobre una gráfica (implementar reglas CSS de corte de página en el motor de render PDF).
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 11 -->
+  <div class="page-break"></div>
+  <h2>3.6 Módulo 6: Simulador de Comisiones y Retenciones</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-COM-01: Cálculo de Neto a Recibir vs Tasa Proveedor (IVA & SAT)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-COM-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-high">ALTA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> administrador del comercio,<br>
+          <strong>quiero</strong> simular cuánto voy a recibir neto de una venta de $10,000 MXN cobrada por Clip, Stripe o Mercado Pago,<br>
+          <strong>para</strong> ajustar mis precios de venta al cliente de manera que mi margen de ganancia no se vea afectado por las comisiones.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está en la página de <strong>Pagos (Simulador de Comisiones)</strong>.<br>
+          2. Las tasas base del sistema están configuradas en la base de datos (p. ej., Stripe: 3.6% + $3.00, IVA: 16%, Retención ISR/IVA SAT: Variable).
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Localiza el campo <strong>"Monto a Cobrar"</strong>. Ingresa el valor exacto de <kbd>10000.00</kbd>.<br>
+          2. Elige la pasarela <strong>"Stripe"</strong> de la lista desplegable de proveedores. Observa que el simulador actualiza de inmediato el cálculo sin requerir que presiones un botón de enviar.<br>
+          3. Comprueba el desglose aritmético generado en pantalla:<br>
+             - Comisión Base: $360.00 MXN + $3.00 MXN = $363.00 MXN.<br>
+             - IVA de la Comisión (16%): $58.08 MXN.<br>
+             - Retención SAT (Simulada): $200.00 MXN.<br>
+             - Neto a Recibir: $9,378.92 MXN.<br>
+          4. Realiza el cálculo manualmente en papel o calculadora científica para contrastar el resultado y validar que no haya desviaciones por redondeo.<br>
+          5. Selecciona la opción de <strong>"Clip"</strong> y observa el cambio de valores de acuerdo a las tasas específicas de Clip.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El simulador de comisiones realiza los cálculos matemáticos en tiempo real en el frontend con precisión absoluta (usando librerías que prevengan los problemas de coma flotante de JS, como centavos enteros). El desglose visual de las deducciones e impuestos es intuitivo y fácil de comprender.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Fórmula Transparente:</strong> El usuario debe tener acceso a ver un desglose detallado de la fórmula al hacer clic en un pequeño enlace de "Ver fórmula aplicada".<br>
+          - <strong>Resiliencia a Entradas:</strong> Si el tester escribe letras o caracteres especiales (ej. $10,000.00abc), el input debe autolimpiarse para dejar solo los caracteres numéricos y el punto decimal correspondientes.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 12 -->
+  <div class="page-break"></div>
+  <h2>3.7 Módulo 7: Configuración y Centro de Control B2B</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-CFG-01: Configuración de Comisiones Base y Bitácora de Auditoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-CFG-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-medium">MEDIA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> director administrativo,<br>
+          <strong>quiero</strong> modificar las tasas de comisiones base de las pasarelas de pago cuando el proveedor actualice sus tarifas,<br>
+          <strong>para</strong> que los reportes y el simulador de comisiones sigan entregando cálculos precisos a mi equipo de ventas.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario tiene rol de Administrador en el Tenant.<br>
+          2. Está en la página de <strong>Configuración</strong> en la pestaña "Comisiones".
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. En la lista de pasarelas, localiza <strong>Mercado Pago</strong>. Su tasa actual configurada es de 3.49%.<br>
+          2. Haz clic en el campo y modifica el valor a <kbd>3.79</kbd>.<br>
+          3. Presiona el botón de <strong>"Guardar Tasas"</strong>. Verifica la aparición de una alerta de éxito sutil en la parte inferior derecha.<br>
+          4. Navega a la pestaña de <strong>Bitácora de Auditoría</strong> (en la misma página).<br>
+          5. Verifica la generación de un nuevo registro en la bitácora que indique la acción ejecutada: <i>"El usuario Administrador modificó la tasa base de Mercado Pago de 3.49% a 3.79%."</i>, junto con la fecha, hora exacta y la IP del dispositivo.<br>
+          6. Intenta entrar a esta sección con un usuario de rol "Consultor" y comprueba que la pestaña esté oculta o deshabilitada.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          Las tasas modificadas se persisten en la base de datos PostgreSQL. Toda acción crítica que afecte los cálculos contables debe quedar registrada automáticamente en la bitácora de auditoría inmutable del backend para fines de control interno de seguridad.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Transparencia Contable:</strong> La bitácora de auditoría no debe ser borrable ni editable bajo ninguna circunstancia, ni siquiera por el propio Administrador del Tenant (solo lectura).<br>
+          - <strong>Mensaje de Bitácora Humano:</strong> Los logs de auditoría deben describirse en lenguaje natural (ej. <i>"Cambio de comisión"</i>) en vez de crudos de sistema (ej. <code>UPDATE gateway_rates SET rate = 3.79 WHERE id = 2</code>).
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 13 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-CFG-02: Almacenamiento Seguro de Credenciales Fiscales CIEC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-CFG-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-critical">CRÍTICA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> usuario del corporativo preocupado por la privacidad de mis llaves del SAT,<br>
+          <strong>quiero</strong> que mi contraseña CIEC y claves del SAT queden guardadas con cifrado fuerte de nivel militar en el backend,<br>
+          <strong>para</strong> tener la seguridad de que nadie (ni siquiera los desarrolladores de CuadraPro) puede ver mis contraseñas fiscales en texto plano en la base de datos.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario está en la pestaña "Seguridad / Credenciales SAT" en Configuración.<br>
+          2. El tester tiene acceso de consulta a la base de datos PostgreSQL para verificar el almacenamiento directo.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Localiza el campo <strong>"Contraseña CIEC del SAT"</strong>. Ingresa un valor secreto simulado (ej: <kbd>SatClaveSecreta2026</kbd>).<br>
+          2. Presiona <strong>"Vincular Credencial SAT"</strong>. Verifica el mensaje de éxito en el frontend.<br>
+          3. Observa que en la pantalla el valor ingresado se enmascare inmediatamente con asteriscos (<kbd>••••••••••••</kbd>) y no sea posible copiarlo o visualizarlo en texto plano.<br>
+          4. <strong>Verificación en Backend:</strong> Ejecuta una consulta SQL directa a la base de datos de PostgreSQL sobre la tabla respectiva (ej. <code>SELECT ciec_password, ciec_iv, ciec_tag FROM tenant_credentials WHERE tenant_id = ...</code>).<br>
+          5. Verifica la legibilidad del campo <code>ciec_password</code>. Debe mostrar una cadena hexadecimal incomprensible (el cifrado) y deben existir campos separados para el Vector de Inicialización (<code>ciec_iv</code>) y el Tag de autenticación (<code>ciec_tag</code>).
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El backend debe interceptar el valor en texto plano, encriptarlo utilizando el algoritmo simétrico AES-256-GCM antes de escribirlo en la base de datos PostgreSQL, y guardar la llave e IV correspondientes de forma segura. El frontend no debe exponer las credenciales del SAT en texto plano en sus llamadas de API ni en variables locales.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Seguridad Extrema:</strong> Si se corrompe o cambia la clave secreta de entorno del servidor (<code>JWT_SECRET</code> o <code>CRYPTO_SECRET</code>), el sistema no debe fallar de forma ruidosa revelando la clave anterior, sino emitir un error genérico y seguro: <i>"No se pudo descifrar la credencial fiscal. Por favor, reconfigure su contraseña CIEC."</i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 14 -->
+  <div class="page-break"></div>
+  <h2>3.8 Módulo 8: Aspectos Globales y Experiencia de Usuario (UX/UI)</h2>
+  
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-GLO-01: Tema Claro / Oscuro Elástico con Framer Motion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-GLO-01</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-low">BAJA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> usuario que trabaja horas extra por la noche analizando estados financieros,<br>
+          <strong>quiero</strong> cambiar la interfaz al modo oscuro de forma fluida y elástica,<br>
+          <strong>para</strong> descansar mi vista de la luz blanca de la pantalla sin interrumpir mis actividades ni perder los filtros seleccionados en mi tabla.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El usuario se encuentra en la página de Reportes con datos cargados y filtros aplicados en el mes actual.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Observa el botón selector de tema (sol/luna) situado en la esquina inferior del Sidebar lateral.<br>
+          2. Haz clic en el selector de tema. Presta atención a la animación de cambio: el fondo debe hacer una transición elástica suave utilizando Framer Motion.<br>
+          3. Observa cómo cambian los colores de fondo: el fondo principal cambia de Gris Claro (<code>#f8f9fa</code>) a Negro Profundo (<code>#0B0F19</code>) y los componentes se vuelven Carbón de Contraste (<code>#151922</code>).<br>
+          4. Confirma que el contraste de texto sea de al menos 4.5:1 (estándar WCAG) en ambos modos para asegurar una lectura cómoda.<br>
+          5. Verifica que los datos cargados en la tabla de reportes y las fechas seleccionadas en los inputs permanezcan inalteradas tras el cambio de tema.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El toggle de tema funciona de manera instantánea en el cliente y propaga la propiedad de clase (ej. <code>dark</code>) a toda la estructura del DOM de React. Los gráficos basados en canvas/SVG y las tablas de datos se actualizan dinámicamente con estilos optimizados sin recargar la página.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Focalización y Fluidez:</strong> La transición elástica debe tomar menos de 350 milisegundos para evitar efectos de retraso molestos (lag), y el estado del tema del usuario debe guardarse en LocalStorage para recordarlo en su próxima visita.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CASO 15 -->
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th colspan="2">Caso de Prueba CP-GLO-02: Validación de Entrada de Datos con Zod (Mitigación SQL)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">ID / Referencia</td>
+        <td class="content-cell">CP-GLO-02</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Prioridad / Severidad</td>
+        <td class="content-cell"><span class="badge badge-critical">CRÍTICA</span></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Narrativa de Usuario</td>
+        <td class="content-cell">
+          <strong>Como</strong> analista de seguridad de la información corporativa,<br>
+          <strong>quiero</strong> que toda entrada de datos del sistema pase por validaciones estrictas de esquema en el backend,<br>
+          <strong>para</strong> evitar vulnerabilidades críticas como inyección SQL u otros vectores de ataque malicioso a través de formularios.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Precondiciones</td>
+        <td class="content-cell">
+          1. El tester cuenta con una herramienta para enviar peticiones directas HTTP al backend (como Postman o cURL).<br>
+          2. El endpoint de creación de transacciones manuales está activo.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos de Ejecución (Enfoque Humano)</td>
+        <td class="content-cell">
+          1. Intenta enviar una petición POST al endpoint de guardar transacciones manuales con un formato alterado, por ejemplo, enviando una cadena de texto en lugar de un número en el campo <code>monto</code> (ej. <code>"monto": "diez mil pesos"</code>).<br>
+          2. Intenta inyectar código SQL clásico en el campo <code>comentario</code> (ej. <code>"comentario": "'; DROP TABLE tenants; --"</code>).<br>
+          3. Envía las peticiones al backend y analiza la estructura del error devuelto.<br>
+          4. Comprueba que el backend rechace la petición antes de interactuar con la base de datos PostgreSQL, gracias a las validaciones de esquema declaradas con Zod.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Resultado Esperado</td>
+        <td class="content-cell">
+          El backend rechaza las peticiones malformadas arrojando un error HTTP 400 Bad Request. Los esquemas de Zod interceptan las variables inválidas impidiendo que el motor de PostgreSQL reciba queries potencialmente peligrosas o datos inconsistentes.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Criterios de Aceptación (Calidad Humana)</td>
+        <td class="content-cell">
+          - <strong>Seguridad:</strong> El mensaje de error devuelto por la API del backend debe limitarse a indicar qué campos fallaron la validación de formato (ej. <i>"El campo monto debe ser un valor numérico"</i>), omitiendo stack traces y detalles internos del motor PostgreSQL.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ==================== SECCIÓN 4: PROCEDIMIENTO Y SEGUIMIENTO ==================== -->
+  <h1>4. REGISTRO DE FALLAS E INFORME DE QA</h1>
+  
+  <h2>4.1 Formato Humanizado de Reporte de Defectos (Bugs)</h2>
+  <p>
+    Cuando un tester identifique una desviación respecto al comportamiento esperado, debe redactar un reporte de bug que combine la precisión técnica con la empatía hacia el desarrollador. Se propone el siguiente formato para registrar incidentes:
+  </p>
+
+  <table class="test-table" style="margin-bottom: 25px;">
+    <thead>
+      <tr>
+        <th colspan="2">Estructura Sugerida para Reportes de Bugs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label-cell">Título del Incidente</td>
+        <td class="content-cell"><i>Ej. "[Módulo de Conciliación] El botón de subir CSV no responde al dar doble clic rápido en Safari"</i></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Impacto Contable</td>
+        <td class="content-cell"><strong>¿Cómo afecta al usuario?</strong> <i>Ej. Provoca confusión en el auxiliar porque cree que la carga no inició, duplicando el envío del estado de cuenta.</i></td>
+      </tr>
+      <tr>
+        <td class="label-cell">Pasos para Reproducir</td>
+        <td class="content-cell">
+          1. Ve a Captura.<br>
+          2. Selecciona un archivo CSV.<br>
+          3. Haz doble clic rápidamente en el botón de confirmación en un dispositivo Apple con Safari.
+        </td>
+      </tr>
+      <tr>
+        <td class="label-cell">Comportamiento Observado</td>
+        <td class="content-cell">El botón se congela y no muestra retroalimentación de carga. El estado se sube dos veces en base de datos.</td>
+      </tr>
+      <tr>
+        <td class="label-cell">Propuesta de Solución Empática</td>
+        <td class="content-cell">Deshabilitar el botón inmediatamente tras el primer clic (dejar un estado <code>isSubmitting = true</code>) y mostrar un texto de cargando.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Criterios de Aceptación para Despliegue en Producción</h2>
+  <p>
+    Para autorizar el pase a producción de cualquier nueva funcionalidad o corrección en el ecosistema CuadraPro, se debe satisfacer el siguiente umbral de calidad:
+  </p>
+  <ul>
+    <li><strong>Cero Fallas Críticas o Altas:</strong> No debe existir ningún bug de seguridad (fuga Multi-Tenant, vulnerabilidades SQL o CIEC expuestas) ni de bloqueo operativo (caídas del servidor backend).</li>
+    <li><strong>95% de Casos Exitosos:</strong> El módulo de pruebas debe ser ejecutado en su totalidad, registrando éxito en al menos 19 de los 20 escenarios detallados.</li>
+    <li><strong>Validación UX Satisfactoria:</strong> Los elementos del tema elástico (Framer Motion) y el control de inactividad deben desempeñarse suavemente y sin retrasos (lag) perceptibles para el usuario promedio.</li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Nota de Seguridad de Despliegue</div>
+    <p>
+      Antes de habilitar cualquier tenant en producción, el administrador de QA debe firmar digitalmente el reporte de conformidad del Módulo de Pruebas, garantizando que el set de llaves AES del servidor no fue alterado durante las simulaciones.
+    </p>
+  </div>
+
+  <div style="text-align: center; margin-top: 50px; border-top: 1px solid #CBD5E0; padding-top: 20px; font-size: 9pt; color: #718096;">
+    Fin del Documento de Aseguramiento de Calidad — CuadraPro Corp. 2026.
+  </div>
+
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(__dirname, 'Modulo_de_Pruebas_CuadraPro.doc'), htmlContent, 'utf-8');
+console.log('Documento de pruebas generado con éxito.');
