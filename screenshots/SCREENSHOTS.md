@@ -1,17 +1,19 @@
-# CuadraPro — Galería de Screenshots del Sistema
+# CuadraPro — Galería de Screenshots y Assets del Sistema
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Cuadra-PRO-00C49F?style=for-the-badge&logo=shield&logoColor=white" alt="CuadraPro Logo" width="180" />
-  <p><strong>Bóveda de Conciliación Financiera B2B — Capturas de Pantalla</strong></p>
+  <img src="00_logo.png" alt="CuadraPro Logo" width="220" />
+  <p><strong>Bóveda de Conciliación Financiera B2B — Capturas de Pantalla y Branding</strong></p>
   <p><em>Plataforma SaaS Multi-Tenant para el análisis y gestión de flujos de efectivo, deducciones y facturación corporativa.</em></p>
 </div>
 
 ---
 
-## 📋 Índice de Pantallas
+## 📋 Índice de Pantallas y Assets
 
-| # | Pantalla | Archivo | Descripción |
-|---|----------|---------|-------------|
+| # | Pantalla / Asset | Archivo | Descripción |
+|---|------------------|---------|-------------|
+| 0 | Logo Oficial CuadraPro | `00_logo.png` | Isotipo e Identidad de marca oficial (Escudo + Símbolo financiero) |
+| 0.1 | Icono de Aplicación | `00_icon.png` | Icono/Favicon oficial en alta resolución |
 | 1 | Landing Page — Hero | `01_landing_hero.png` | Página de aterrizaje con hero section, CTA y navegación principal |
 | 2 | Landing Page — Apps Grid | `08_landing_apps_grid.png` | Grilla de 16 módulos/aplicaciones tipo Odoo |
 | 3 | Login / Acceso Seguro | `02_login.png` | Formulario de inicio de sesión con Google OAuth y 2FA |
@@ -22,6 +24,13 @@
 | 8 | Centro de Control | `07_configuracion.png` | Configuración de tasas, bitácora de auditoría y CIEC |
 
 ---
+
+## 0. 🛡️ Logo e Identidad Visual
+
+![CuadraPro Logo Oficial](00_logo.png)
+
+---
+
 
 ## 1. 🏠 Landing Page — Hero Section
 
