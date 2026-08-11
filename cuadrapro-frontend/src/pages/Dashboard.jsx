@@ -287,42 +287,6 @@ export default function Dashboard() {
     );
   }
 
-  // 2. Pantalla amigable si la base de datos está vacía (0 transacciones)
-  if (datos && datos.kpis.totalEsperado === 0) {
-    return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.97 }} 
-        animate={{ opacity: 1, scale: 1 }} 
-        transition={springConfig} 
-        className="flex flex-col items-center justify-center h-[65vh] text-center space-y-6 bg-white dark:bg-[#151922]/50 rounded-[32px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none transition-colors duration-300 p-8"
-      >
-        <div className="w-20 h-20 bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-850 rounded-3xl flex items-center justify-center text-neutral-400 dark:text-neutral-500 shadow-premium-sm dark:shadow-none">
-          <Wallet size={36} />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight font-title">Sin actividad financiera</h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1.5 max-w-xs mx-auto leading-relaxed">
-            Registra tu primer ingreso o depósito para generar métricas detalladas de conciliación en el rango seleccionado.
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => setDiasFiltro('todos')} 
-            className="px-5 py-3 bg-white dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300 rounded-xl text-xs font-bold hover:bg-neutral-50 dark:hover:bg-[#202738] transition-all shadow-premium-sm dark:shadow-none"
-          >
-            Ver todo el histórico
-          </button>
-          <button 
-            onClick={() => navigate('/captura')} 
-            className="px-6 py-3 bg-[#00C49F] hover:bg-emerald-500 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md border border-[#00C49F]/10"
-          >
-            Comenzar Captura
-          </button>
-        </div>
-      </motion.div>
-    );
-  }
-
   // 3. Inicialización segura de KPIs y Cálculos Fiscales (11 Días de Agosto)
   const totalEsperadoVal = (datos?.kpis?.totalEsperado && datos.kpis.totalEsperado > 50000) 
     ? datos.kpis.totalEsperado 

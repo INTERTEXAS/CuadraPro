@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/cuadrapro-frontend/dist/index.html" }
+  ]
+}

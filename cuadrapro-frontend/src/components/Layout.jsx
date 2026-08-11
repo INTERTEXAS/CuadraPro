@@ -32,6 +32,28 @@ export default function Layout({ children }) {
   };
 
   const [avatarError, setAvatarError] = useState(false);
+  const [busquedaGlobal, setBusquedaGlobal] = useState('');
+  const [mostrarResultados, setMostrarResultados] = useState(false);
+
+  const DIRECTORIO_BUSQUEDA = [
+    { id: 't-1', nombre: 'Acme Finance QA', detalle: 'RFC: AFQ260101XYZ • Tenant Corporativo', categoria: 'Empresa / Tenant', path: '/clientes' },
+    { id: 't-2', nombre: 'Tech Logistics S.A. de C.V.', detalle: 'RFC: TLG980101XYZ • Matriz Fiscal', categoria: 'Empresa / Tenant', path: '/clientes' },
+    { id: 't-3', nombre: 'Grupo Retail México', detalle: 'RFC: GRM190203ABC • Sucursales B2B', categoria: 'Empresa / Tenant', path: '/clientes' },
+    { id: 't-4', nombre: 'Fintech Global SAPI', detalle: 'RFC: FGS210815KLM • Pasarelas API', categoria: 'Empresa / Tenant', path: '/clientes' },
+    { id: 'm-1', nombre: 'Dashboard de Auditoría', detalle: 'Métricas financieras en tiempo real y KPIs', categoria: 'Módulo', path: '/dashboard' },
+    { id: 'm-2', nombre: 'Conciliación SAT y Bancos', detalle: 'Cruce tripartito y carga de CFDIs / XML', categoria: 'Módulo', path: '/captura' },
+    { id: 'm-3', nombre: 'Reportes y Balances CFO', detalle: 'Exportación de balances en PDF y Excel', categoria: 'Módulo', path: '/reportes' },
+    { id: 'm-4', nombre: 'Simulador de Comisiones', detalle: 'Cálculo de tarifas Clip, Stripe y Mercado Pago', categoria: 'Módulo', path: '/pagos' },
+    { id: 'm-5', nombre: 'Configuración y Bóveda CIEC', detalle: 'Gestión de credenciales cifradas AES-256', categoria: 'Módulo', path: '/configuracion' }
+  ];
+
+  const resultadosFiltrados = busquedaGlobal.trim()
+    ? DIRECTORIO_BUSQUEDA.filter(item => 
+        item.nombre.toLowerCase().includes(busquedaGlobal.toLowerCase()) || 
+        item.detalle.toLowerCase().includes(busquedaGlobal.toLowerCase())
+      )
+    : [];
+
   const token = localStorage.getItem('tokenCuadraPro');
   let userRol = 'Administrador';
   let userName = 'Usuario';
@@ -275,14 +297,70 @@ export default function Layout({ children }) {
               <Menu size={20} />
             </button>
             
-            {/* Buscador Global como el de la foto */}
+            {/* Buscador Global Interactivo con Panel de Resultados */}
             <div className="relative w-full hidden sm:block">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" size={15} />
               <input 
                 type="text" 
-                placeholder="Búsqueda global..." 
-                className="w-full bg-white dark:bg-[#151922]/50 border border-neutral-200 dark:border-neutral-800 focus:border-b2bHighlight/40 focus:outline-none rounded-xl pl-11 pr-4 py-2.5 text-xs text-neutral-800 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 transition-colors"
+                value={busquedaGlobal}
+                onChange={e => {
+                  setBusquedaGlobal(e.target.value);
+                  setMostrarResultados(true);
+                }}
+                onFocus={() => {
+                  if (busquedaGlobal.trim()) setMostrarResultados(true);
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') setMostrarResultados(true);
+                  if (e.key === 'Escape') setMostrarResultados(false);
+                }}
+                placeholder="Buscar empresas, RFC, módulos o tenants..." 
+                className="w-full bg-white dark:bg-[#151922]/50 border border-neutral-200 dark:border-neutral-800 focus:border-b2bHighlight/40 focus:outline-none rounded-xl pl-11 pr-4 py-2.5 text-xs text-neutral-800 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 transition-colors shadow-sm"
               />
+
+              {/* Panel de Resultados Flotante */}
+              {mostrarResultados && busquedaGlobal.trim() !== '' && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setMostrarResultados(false)}></div>
+                  <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-[#151922] border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-premium-lg dark:shadow-2xl z-40 p-2 overflow-hidden animate-fade-in max-h-80 overflow-y-auto">
+                    {resultadosFiltrados.length > 0 ? (
+                      <div className="space-y-1">
+                        <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                          Coincidencias encontradas ({resultadosFiltrados.length})
+                        </div>
+                        {resultadosFiltrados.map(item => (
+                          <div 
+                            key={item.id}
+                            onClick={() => {
+                              navigate(item.path);
+                              setMostrarResultados(false);
+                              setBusquedaGlobal('');
+                            }}
+                            className="px-3 py-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-[#1f2637] cursor-pointer transition-colors flex items-center justify-between"
+                          >
+                            <div>
+                              <p className="text-xs font-bold text-neutral-900 dark:text-white">{item.nombre}</p>
+                              <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{item.detalle}</p>
+                            </div>
+                            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+                              {item.categoria}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="px-4 py-6 text-center space-y-1">
+                        <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                          No se encontraron resultados para &ldquo;{busquedaGlobal}&rdquo;
+                        </p>
+                        <p className="text-[10px] text-neutral-400">
+                          Verifica la ortografía o busca por nombre de empresa, RFC o módulo.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           

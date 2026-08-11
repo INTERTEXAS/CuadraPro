@@ -26,9 +26,22 @@ export default function Pagos() {
     { id: 'LIQ-089', pasarela: 'Stripe Direct', fecha: '28 Jun, 2026', bruto: 22000, comision: 770.0, neto: 21230.0, banco: 'BBVA Bancomer' }
   ];
 
-  // Cálculo del simulador
+  // Cálculo del simulador con validación estricta de monto > 0
+  const valorNumerico = parseFloat(montoSimulado);
+  const esMontoInvalido = montoSimulado === '' || isNaN(valorNumerico) || valorNumerico <= 0;
+
   const calcularSimulacion = () => {
-    const bruto = parseFloat(montoSimulado) || 0;
+    if (esMontoInvalido) {
+      return {
+        comision: '0.00',
+        iva: '0.00',
+        retencion: '0.00',
+        neto: '0.00',
+        valido: false
+      };
+    }
+
+    const bruto = valorNumerico;
     let tasa = 3.5;
     let fija = 0;
     if (pasarelaSeleccionada === 'clip') {
@@ -47,7 +60,8 @@ export default function Pagos() {
       comision: comision.toFixed(2),
       iva: ivaComision.toFixed(2),
       retencion: satRetencion.toFixed(2),
-      neto: neto > 0 ? neto.toFixed(2) : '0.00'
+      neto: neto > 0 ? neto.toFixed(2) : '0.00',
+      valido: true
     };
   };
 
@@ -116,12 +130,23 @@ export default function Pagos() {
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 font-bold">$</span>
                 <input 
                   type="number" 
+                  min="0.01"
+                  step="any"
                   value={montoSimulado}
                   onChange={e => setMontoSimulado(e.target.value)}
-                  className="w-full pl-8 pr-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-800 rounded-xl outline-none font-semibold text-neutral-800 dark:text-white" 
+                  className={`w-full pl-8 pr-4 py-2.5 text-xs bg-neutral-50 dark:bg-[#1b2230] border rounded-xl outline-none font-semibold text-neutral-800 dark:text-white transition-colors ${
+                    esMontoInvalido 
+                      ? 'border-rose-500/80 focus:border-rose-500 text-rose-600 dark:text-rose-400' 
+                      : 'border-neutral-200 dark:border-neutral-800 focus:border-b2bHighlight'
+                  }`}
                   placeholder="0.00"
                 />
               </div>
+              {esMontoInvalido && (
+                <p className="text-[11px] font-bold text-rose-500 mt-1.5 flex items-center gap-1 animate-fade-in">
+                  <span>⚠️</span> El monto debe ser mayor a 0 MXN
+                </p>
+              )}
             </div>
 
             <div>
@@ -142,23 +167,39 @@ export default function Pagos() {
         {/* Desglose de Comisión en tiempo real */}
         <div className="bg-white dark:bg-[#151922]/50 p-8 rounded-[32px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none lg:col-span-2 flex flex-col justify-between">
           <div>
-            <h4 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-6 font-title">Resultados de Dispersión</h4>
+            <div className="flex items-center justify-between mb-6">
+              <h4 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-title">Resultados de Dispersión</h4>
+              {esMontoInvalido && (
+                <span className="text-[10px] font-bold text-rose-500 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-md">
+                  Cálculo bloqueado (Monto debe ser mayor a 0)
+                </span>
+              )}
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="p-4 bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-850 rounded-2xl">
                 <span className="text-[9px] font-bold text-neutral-400 dark:text-neutral-500 uppercase block mb-1">Comisión Base</span>
-                <span className="text-sm font-bold text-neutral-850 dark:text-white font-mono">${simulacion.comision}</span>
+                <span className={`text-sm font-bold font-mono ${esMontoInvalido ? 'text-neutral-400' : 'text-neutral-850 dark:text-white'}`}>
+                  {esMontoInvalido ? '—' : `$${simulacion.comision}`}
+                </span>
               </div>
               <div className="p-4 bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-850 rounded-2xl">
                 <span className="text-[9px] font-bold text-neutral-400 dark:text-neutral-500 uppercase block mb-1">IVA de Comisión</span>
-                <span className="text-sm font-bold text-neutral-850 dark:text-white font-mono">${simulacion.iva}</span>
+                <span className={`text-sm font-bold font-mono ${esMontoInvalido ? 'text-neutral-400' : 'text-neutral-850 dark:text-white'}`}>
+                  {esMontoInvalido ? '—' : `$${simulacion.iva}`}
+                </span>
               </div>
               <div className="p-4 bg-neutral-50 dark:bg-[#1b2230] border border-neutral-200 dark:border-neutral-850 rounded-2xl">
                 <span className="text-[9px] font-bold text-neutral-400 dark:text-neutral-500 uppercase block mb-1">Retención SAT</span>
-                <span className="text-sm font-bold text-neutral-850 dark:text-white font-mono">${simulacion.retencion}</span>
+                <span className={`text-sm font-bold font-mono ${esMontoInvalido ? 'text-neutral-400' : 'text-neutral-850 dark:text-white'}`}>
+                  {esMontoInvalido ? '—' : `$${simulacion.retencion}`}
+                </span>
               </div>
-              <div className="p-4 bg-[#00C49F]/5 dark:bg-[#00C49F]/10 border border-[#00C49F]/20 rounded-2xl">
-                <span className="text-[9px] font-bold text-[#00C49F] uppercase block mb-1">Monto Neto a Recibir</span>
-                <span className="text-sm font-black text-neutral-900 dark:text-white font-mono">${simulacion.neto}</span>
+              <div className={`p-4 rounded-2xl border ${esMontoInvalido ? 'bg-neutral-50 dark:bg-[#1b2230] border-neutral-200 dark:border-neutral-850' : 'bg-[#00C49F]/5 dark:bg-[#00C49F]/10 border-[#00C49F]/20'}`}>
+                <span className={`text-[9px] font-bold uppercase block mb-1 ${esMontoInvalido ? 'text-neutral-400' : 'text-[#00C49F]'}`}>Monto Neto a Recibir</span>
+                <span className={`text-sm font-black font-mono ${esMontoInvalido ? 'text-neutral-400' : 'text-neutral-900 dark:text-white'}`}>
+                  {esMontoInvalido ? '—' : `$${simulacion.neto}`}
+                </span>
               </div>
             </div>
           </div>
