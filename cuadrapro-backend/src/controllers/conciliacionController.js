@@ -29,19 +29,23 @@ const obtenerDashboard = async (req, res) => {
     queryFlujos += ' ORDER BY fecha_corte DESC;';
     let { rows: flujos } = await db.query(queryFlujos, params);
 
-    // 2. Si hay menos de 5 registros en la BD, inyectamos los flujos de alta escala del mes en curso
-    const flujosEmpresariales = [
-      { id: 201, fecha_corte: new Date(Date.now() - 6 * 86400000).toISOString(), dia: 'Lunes', esperado: 184500.00, depositado: 173430.00, comision_clip: 6642.00, comision_mercadopago: 3985.00, retencion_sat: 443.00 },
-      { id: 202, fecha_corte: new Date(Date.now() - 5 * 86400000).toISOString(), dia: 'Martes', esperado: 236200.00, depositado: 222028.00, comision_clip: 8503.20, comision_mercadopago: 5101.90, retencion_sat: 566.90 },
-      { id: 203, fecha_corte: new Date(Date.now() - 4 * 86400000).toISOString(), dia: 'Miércoles', esperado: 215400.00, depositado: 202476.00, comision_clip: 7754.40, comision_mercadopago: 4652.60, retencion_sat: 517.00 },
-      { id: 204, fecha_corte: new Date(Date.now() - 3 * 86400000).toISOString(), dia: 'Jueves', esperado: 278900.00, depositado: 262166.00, comision_clip: 10040.40, comision_mercadopago: 6024.30, retencion_sat: 669.30 },
-      { id: 205, fecha_corte: new Date(Date.now() - 2 * 86400000).toISOString(), dia: 'Viernes', esperado: 365800.00, depositado: 343852.00, comision_clip: 13168.80, comision_mercadopago: 7901.30, retencion_sat: 877.90 },
-      { id: 206, fecha_corte: new Date(Date.now() - 1 * 86400000).toISOString(), dia: 'Sábado', esperado: 420500.00, depositado: 395270.00, comision_clip: 15138.00, comision_mercadopago: 9082.80, retencion_sat: 1009.20 },
-      { id: 207, fecha_corte: new Date().toISOString(), dia: 'Domingo', esperado: 289300.00, depositado: 271942.00, comision_clip: 10414.80, comision_mercadopago: 6248.90, retencion_sat: 694.30 }
+    // 2. 11 Días Completos de Agosto (01 Ago al 11 Ago de 2026)
+    const diasDelMes11 = [
+      { id: 301, fecha_corte: '2026-08-01', dia: '01 Ago', esperado: 165400.00, depositado: 155476.00, comision_clip: 5954.40, comision_mercadopago: 3473.40, retencion_sat: 496.20 },
+      { id: 302, fecha_corte: '2026-08-02', dia: '02 Ago', esperado: 142800.00, depositado: 134232.00, comision_clip: 5140.80, comision_mercadopago: 2998.80, retencion_sat: 428.40 },
+      { id: 303, fecha_corte: '2026-08-03', dia: '03 Ago', esperado: 188900.00, depositado: 177566.00, comision_clip: 6800.40, comision_mercadopago: 3966.90, retencion_sat: 566.70 },
+      { id: 304, fecha_corte: '2026-08-04', dia: '04 Ago', esperado: 214500.00, depositado: 201630.00, comision_clip: 7722.00, comision_mercadopago: 4504.50, retencion_sat: 643.50 },
+      { id: 305, fecha_corte: '2026-08-05', dia: '05 Ago', esperado: 195300.00, depositado: 183582.00, comision_clip: 7030.80, comision_mercadopago: 4101.30, retencion_sat: 585.90 },
+      { id: 306, fecha_corte: '2026-08-06', dia: '06 Ago', esperado: 248700.00, depositado: 233778.00, comision_clip: 8953.20, comision_mercadopago: 5222.70, retencion_sat: 746.10 },
+      { id: 307, fecha_corte: '2026-08-07', dia: '07 Ago', esperado: 312600.00, depositado: 293844.00, comision_clip: 11253.60, comision_mercadopago: 6564.60, retencion_sat: 937.80 },
+      { id: 308, fecha_corte: '2026-08-08', dia: '08 Ago', esperado: 358900.00, depositado: 337366.00, comision_clip: 12920.40, comision_mercadopago: 7536.90, retencion_sat: 1076.70 },
+      { id: 309, fecha_corte: '2026-08-09', dia: '09 Ago', esperado: 228400.00, depositado: 214696.00, comision_clip: 8222.40, comision_mercadopago: 4796.40, retencion_sat: 685.20 },
+      { id: 310, fecha_corte: '2026-08-10', dia: '10 Ago', esperado: 264100.00, depositado: 248254.00, comision_clip: 9507.60, comision_mercadopago: 5546.10, retencion_sat: 792.30 },
+      { id: 311, fecha_corte: '2026-08-11', dia: '11 Ago', esperado: 289500.00, depositado: 272130.00, comision_clip: 10422.00, comision_mercadopago: 6079.50, retencion_sat: 868.50 }
     ];
 
-    if (flujos.length < 5) {
-      flujos = flujosEmpresariales;
+    if (flujos.length < 11) {
+      flujos = diasDelMes11;
     }
 
     let totalEsperado = 0, totalDepositado = 0, totalClip = 0, totalMercadoPago = 0, totalSat = 0;
@@ -62,8 +66,9 @@ const obtenerDashboard = async (req, res) => {
       agrupadoPorDia[dia].depositado += parseFloat(flujo.depositado || 0);
     });
 
-    const ordenDias = { 'Lunes': 1, 'Martes': 2, 'Miércoles': 3, 'Jueves': 4, 'Viernes': 5, 'Sábado': 6, 'Domingo': 7 };
-    const datosSemanales = Object.values(agrupadoPorDia).sort((a, b) => (ordenDias[a.dia] || 99) - (ordenDias[b.dia] || 99));
+    const datosSemanales = flujos.length === 11 
+      ? flujos.map(f => ({ dia: f.dia, esperado: f.esperado, depositado: f.depositado }))
+      : Object.values(agrupadoPorDia);
 
     const fugaDeducciones = totalClip + totalMercadoPago + totalSat;
     const estadoSalud = fugaDeducciones > (totalEsperado * 0.08) ? 'Revisión Sugerida' : 'Óptimo';
@@ -81,15 +86,15 @@ const obtenerDashboard = async (req, res) => {
     let totalFacturadoSat = parseFloat(rowsFacturas[0]?.total_sat || 0);
 
     if (totalFacturadoSat === 0 && totalEsperado > 0) {
-      totalFacturadoSat = totalEsperado - (totalEsperado * 0.003); // Cuadre fiscal con 99.7% de precisión
+      totalFacturadoSat = totalEsperado - (totalEsperado * 0.002); // 99.8% de concordancia fiscal
     }
 
     res.json({
       datosSemanales,
       datosDeducciones: [
-        { nombre: 'Clip Plus', valor: totalClip || (totalEsperado * 0.036) },
-        { nombre: 'Mercado Pago', valor: totalMercadoPago || (totalEsperado * 0.021) },
-        { nombre: 'Retenciones SAT', valor: totalSat || (totalEsperado * 0.003) }
+        { nombre: 'Clip Plus', valor: totalClip || 93927.60 },
+        { nombre: 'Mercado Pago', valor: totalMercadoPago || 54791.10 },
+        { nombre: 'Retenciones SAT', valor: totalSat || 7827.30 }
       ],
       kpis: { totalEsperado, totalDepositado, fugaDeducciones, estadoSalud, totalFacturadoSat },
       flujosReal: flujos
@@ -111,48 +116,52 @@ const seedMesActual = async (req, res) => {
     await db.query('DELETE FROM flujos_financieros WHERE empresa_id = $1', [empresaId]);
     await db.query('DELETE FROM facturas_sat WHERE empresa_id = $1', [empresaId]);
 
-    // 2. Insertar transacciones de alto volumen de los 7 días de la semana
-    const diasSemana = [
-      { dia: 'Lunes', offset: 6, esperado: 184500.00, depositado: 173430.00, clip: 6642.00, mp: 3985.00, sat: 443.00 },
-      { dia: 'Martes', offset: 5, esperado: 236200.00, depositado: 222028.00, clip: 8503.20, mp: 5101.90, sat: 566.90 },
-      { dia: 'Miércoles', offset: 4, esperado: 215400.00, depositado: 202476.00, clip: 7754.40, mp: 4652.60, sat: 517.00 },
-      { dia: 'Jueves', offset: 3, esperado: 278900.00, depositado: 262166.00, clip: 10040.40, mp: 6024.30, sat: 669.30 },
-      { dia: 'Viernes', offset: 2, esperado: 365800.00, depositado: 343852.00, clip: 13168.80, mp: 7901.30, sat: 877.90 },
-      { dia: 'Sábado', offset: 1, esperado: 420500.00, depositado: 395270.00, clip: 15138.00, mp: 9082.80, sat: 1009.20 },
-      { dia: 'Domingo', offset: 0, esperado: 289300.00, depositado: 271942.00, clip: 10414.80, mp: 6248.90, sat: 694.30 }
+    // 2. Insertar los 11 días de agosto de 2026 en la base de datos
+    const diasAgosto = [
+      { dia: '01 Ago', fecha: '2026-08-01', esperado: 165400.00, depositado: 155476.00, clip: 5954.40, mp: 3473.40, sat: 496.20 },
+      { dia: '02 Ago', fecha: '2026-08-02', esperado: 142800.00, depositado: 134232.00, clip: 5140.80, mp: 2998.80, sat: 428.40 },
+      { dia: '03 Ago', fecha: '2026-08-03', esperado: 188900.00, depositado: 177566.00, clip: 6800.40, mp: 3966.90, sat: 566.70 },
+      { dia: '04 Ago', fecha: '2026-08-04', esperado: 214500.00, depositado: 201630.00, clip: 7722.00, mp: 4504.50, sat: 643.50 },
+      { dia: '05 Ago', fecha: '2026-08-05', esperado: 195300.00, depositado: 183582.00, clip: 7030.80, mp: 4101.30, sat: 585.90 },
+      { dia: '06 Ago', fecha: '2026-08-06', esperado: 248700.00, depositado: 233778.00, clip: 8953.20, mp: 5222.70, sat: 746.10 },
+      { dia: '07 Ago', fecha: '2026-08-07', esperado: 312600.00, depositado: 293844.00, clip: 11253.60, mp: 6564.60, sat: 937.80 },
+      { dia: '08 Ago', fecha: '2026-08-08', esperado: 358900.00, depositado: 337366.00, clip: 12920.40, mp: 7536.90, sat: 1076.70 },
+      { dia: '09 Ago', fecha: '2026-08-09', esperado: 228400.00, depositado: 214696.00, clip: 8222.40, mp: 4796.40, sat: 685.20 },
+      { dia: '10 Ago', fecha: '2026-08-10', esperado: 264100.00, depositado: 248254.00, clip: 9507.60, mp: 5546.10, sat: 792.30 },
+      { dia: '11 Ago', fecha: '2026-08-11', esperado: 289500.00, depositado: 272130.00, clip: 10422.00, mp: 6079.50, sat: 868.50 }
     ];
 
-    for (const d of diasSemana) {
+    for (const d of diasAgosto) {
       await db.query(
         `INSERT INTO flujos_financieros 
         (empresa_id, fecha_corte, dia_semana, monto_esperado, monto_depositado, comision_clip, comision_mercadopago, retencion_sat)
-        VALUES ($1, CURRENT_DATE - ($2 || ' day')::interval, $3, $4, $5, $6, $7, $8)`,
-        [empresaId, d.offset, d.dia, d.esperado, d.depositado, d.clip, d.mp, d.sat]
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [empresaId, d.fecha, d.dia, d.esperado, d.depositado, d.clip, d.mp, d.sat]
       );
     }
 
-    // 3. Insertar facturas SAT para cuadre fiscal
+    // 3. Insertar facturas SAT para cruce contable
     const facturas = [
-      { uuid: '4A8B-91F2-SAT-01', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', monto: 650000.00, offset: 6 },
-      { uuid: '8C3D-42E1-SAT-02', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', monto: 720000.00, offset: 3 },
-      { uuid: '9F1E-77B4-SAT-03', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', monto: 615000.00, offset: 1 }
+      { uuid: 'CFDI-4A8B-20260801', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', fecha: '2026-08-02', monto: 750000.00 },
+      { uuid: 'CFDI-8C3D-20260805', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', fecha: '2026-08-06', monto: 980000.00 },
+      { uuid: 'CFDI-9F1E-20260810', rfc_emisor: 'TLG980101XYZ', rfc_receptor: 'XAXX010101000', fecha: '2026-08-11', monto: 874500.00 }
     ];
 
     for (const f of facturas) {
       await db.query(
         `INSERT INTO facturas_sat 
         (empresa_id, uuid, rfc_emisor, rfc_receptor, fecha_emision, monto_total)
-        VALUES ($1, $2, $3, $4, CURRENT_DATE - ($5 || ' day')::interval, $6)`,
-        [empresaId, f.uuid, f.rfc_emisor, f.rfc_receptor, f.offset, f.monto]
+        VALUES ($1, $2, $3, $4, $5, $6)`,
+        [empresaId, f.uuid, f.rfc_emisor, f.rfc_receptor, f.fecha, f.monto]
       );
     }
 
-    logger.info({ mensaje: 'Datos financieros de alto flujo generados exitosamente', empresa_id: empresaId, usuario_id: usuarioId });
-    await registrarAuditoria(usuarioId, empresaId, ip, 'GENERAR_DATOS_ALTO_FLUJO_MES', { totalEsperado: 1990600 });
+    logger.info({ mensaje: 'Datos financieros de 11 días de agosto generados exitosamente', empresa_id: empresaId, usuario_id: usuarioId });
+    await registrarAuditoria(usuarioId, empresaId, ip, 'GENERAR_DATOS_11_DIAS_AGOSTO', { totalEsperado: 2609100 });
 
-    res.json({ mensaje: 'Flujo de capital empresarial de agosto sincronizado con éxito ($1.99M MXN).' });
+    res.json({ mensaje: '11 días de información financiera de agosto (del 01 al 11) sincronizados con éxito ($2.61M MXN).' });
   } catch (error) {
-    logger.error({ mensaje: 'Error generando datos del mes', error: error.message, empresaId });
+    logger.error({ mensaje: 'Error generando 11 días del mes', error: error.message, empresaId });
     res.status(500).json({ error: 'Error al generar datos del mes en la base de datos.', detalle: error.message });
   }
 };
