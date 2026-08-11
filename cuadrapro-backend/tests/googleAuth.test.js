@@ -53,6 +53,7 @@ describe('Integración Google OAuth Endpoint POST /api/v1/auth/google', () => {
       json: () => Promise.resolve({
         email: 'test_google_nuevo@example.com',
         name: 'Usuario Google Nuevo',
+        picture: 'https://lh3.googleusercontent.com/a/test_pic_url',
         email_verified: true
       })
     });
@@ -82,6 +83,7 @@ describe('Integración Google OAuth Endpoint POST /api/v1/auth/google', () => {
       json: () => Promise.resolve({
         email: 'test_google_nuevo@example.com',
         name: 'Usuario Google Nuevo',
+        picture: 'https://lh3.googleusercontent.com/a/test_pic_url',
         email_verified: true
       })
     });

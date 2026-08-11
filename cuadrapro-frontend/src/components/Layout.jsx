@@ -31,15 +31,18 @@ export default function Layout({ children }) {
     setTema(prev => prev === 'light' ? 'dark' : 'light');
   };
 
+  const [avatarError, setAvatarError] = useState(false);
   const token = localStorage.getItem('tokenCuadraPro');
   let userRol = 'Administrador';
   let userName = 'Usuario';
   let userInitials = 'US';
+  let userAvatar = null;
   if (token) {
     try {
       const payload = JSON.parse(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
       userRol = payload.rol || 'Administrador';
       userName = payload.nombre || payload.email || 'Usuario';
+      userAvatar = payload.avatar || payload.picture || payload.foto_perfil || null;
       // Generar iniciales: tomar la primera letra de cada palabra (máx 2)
       const partes = userName.trim().split(/\s+/);
       userInitials = partes.length >= 2 
@@ -295,8 +298,16 @@ export default function Layout({ children }) {
 
             {/* Perfil de Usuario Premium (Sarah Jensen, CEO) */}
             <div className="flex items-center gap-3 border-l border-neutral-200 dark:border-neutral-800/80 pl-6">
-               <div className="w-9 h-9 rounded-full bg-neutral-150 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-850 dark:text-white shadow-md overflow-hidden">
-                  {userInitials === 'US' ? (
+               <div className="w-9 h-9 rounded-full bg-neutral-150 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-850 dark:text-white shadow-md overflow-hidden shrink-0">
+                  {userAvatar && !avatarError ? (
+                    <img 
+                      src={userAvatar} 
+                      alt={userName} 
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : userInitials === 'US' ? (
                     <span className="text-base pt-0.5">👩‍💼</span>
                   ) : (
                     <span>{userInitials}</span>

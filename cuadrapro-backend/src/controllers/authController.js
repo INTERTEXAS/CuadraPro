@@ -266,7 +266,7 @@ const loginGoogle = async (req, res) => {
     }
 
     const perfilGoogle = await googleResponse.json();
-    const { email, name, email_verified } = perfilGoogle;
+    const { email, name, picture, email_verified } = perfilGoogle;
 
     if (!email_verified) {
       return res.status(401).json({ error: 'El correo de Google no está verificado.' });
@@ -318,7 +318,7 @@ const loginGoogle = async (req, res) => {
 
       // Generar Token Temporal de Pre-Autenticación
       const tempToken = jwt.sign(
-        { id: usuario.id, email: usuario.email, preAuth: true, rememberMe: !!rememberMe, tipoLogin: 'google' },
+        { id: usuario.id, email: usuario.email, preAuth: true, rememberMe: !!rememberMe, tipoLogin: 'google', avatar: picture || null },
         process.env.JWT_SECRET,
         { expiresIn: '5m' }
       );
@@ -331,7 +331,14 @@ const loginGoogle = async (req, res) => {
 
       const duracion = rememberMe ? '7d' : '8h';
       const token = jwt.sign(
-        { id: usuario.id, empresa_id: usuario.empresa_id, rol: usuario.rol, nombre: usuario.nombre_completo, email: emailNormalizado }, 
+        { 
+          id: usuario.id, 
+          empresa_id: usuario.empresa_id, 
+          rol: usuario.rol, 
+          nombre: usuario.nombre_completo, 
+          email: emailNormalizado,
+          avatar: picture || null 
+        }, 
         process.env.JWT_SECRET, 
         { expiresIn: duracion }
       );
@@ -397,7 +404,14 @@ const verificarMfa = async (req, res) => {
     // 4. Firmar el token JWT definitivo (Duración según "Remember Me")
     const duracion = rememberMe ? '7d' : '8h';
     const token = jwt.sign(
-      { id: usuario.id, empresa_id: usuario.empresa_id, rol: usuario.rol, nombre: usuario.nombre_completo, email: usuario.email },
+      { 
+        id: usuario.id, 
+        empresa_id: usuario.empresa_id, 
+        rol: usuario.rol, 
+        nombre: usuario.nombre_completo, 
+        email: usuario.email,
+        avatar: decoded.avatar || null
+      },
       process.env.JWT_SECRET,
       { expiresIn: duracion }
     );
