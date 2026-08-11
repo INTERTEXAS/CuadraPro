@@ -774,15 +774,15 @@ export default function Dashboard() {
             <div className="space-y-4">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-neutral-500 font-bold">Total Conciliado</span>
-                <span className="text-neutral-800 dark:text-white font-bold font-mono">${totalEsperadoVal.toLocaleString()}</span>
+                <span className="text-neutral-800 dark:text-white font-bold font-mono">${totalEsperadoVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between items-center text-xs">
                 <span className="text-neutral-500 font-bold">Comisiones y Gastos</span>
-                <span className="text-neutral-800 dark:text-white font-bold font-mono">${fugaDeduccionesVal.toLocaleString()}</span>
+                <span className="text-neutral-800 dark:text-white font-bold font-mono">${fugaDeduccionesVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-neutral-500 font-bold">Publicidad y Mercadotecnia</span>
-                <span className="text-neutral-800 dark:text-white font-bold font-mono">$10,300</span>
+                <span className="text-neutral-500 font-bold">Efectivo Líquido Bancario</span>
+                <span className="text-[#00C49F] font-bold font-mono">${totalDepositadoVal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
           </motion.div>
