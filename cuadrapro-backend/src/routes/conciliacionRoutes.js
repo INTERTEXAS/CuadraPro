@@ -11,5 +11,6 @@ router.get('/dashboard', authMiddleware.verificarToken, conciliacionController.o
 router.post('/registrar', authMiddleware.verificarToken, conciliacionController.registrarFlujo);
 router.post('/subir-facturas', authMiddleware.verificarToken, conciliacionController.subirFacturas);
 router.get('/alertas-fugas', authMiddleware.verificarToken, conciliacionController.obtenerFugasComisiones);
+router.post('/seed-mes', authMiddleware.verificarToken, conciliacionController.seedMesActual);
 
 module.exports = router;

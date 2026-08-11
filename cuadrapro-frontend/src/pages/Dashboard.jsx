@@ -31,35 +31,53 @@ export default function Dashboard() {
   const [ocultarOnboarding, setOcultarOnboarding] = useState(localStorage.getItem('cuadrapro-hide-onboarding') === 'true');
 
   const { success, error: toastError } = useToast();
+  const [sincronizando, setSincronizando] = useState(false);
   const COLORES = ['#00C49F', '#3b82f6', '#f43f5e'];
 
+  const cargarDatos = async () => {
+    setCargando(true);
+    try {
+      const token = localStorage.getItem('tokenCuadraPro');
+      const url = diasFiltro === 'todos'
+        ? `${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard`
+        : `${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard?dias=${diasFiltro}`;
+        
+      const [respuestaDash, respuestaFugas] = await Promise.all([
+        axios.get(url, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/alertas-fugas`, { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+
+      setDatos(respuestaDash.data);
+      setFugas(respuestaFugas.data);
+    } catch (error) {
+      console.error('Error cargando métricas de auditoría', error);
+      toastError('Falla al conectar con la bóveda contable.');
+    } finally {
+      setTimeout(() => setCargando(false), 300);
+    }
+  };
+
   useEffect(() => {
-    const cargarDatos = async () => {
-      setCargando(true);
-      try {
-        const token = localStorage.getItem('tokenCuadraPro');
-        const url = diasFiltro === 'todos'
-          ? `${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard`
-          : `${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/dashboard?dias=${diasFiltro}`;
-          
-        const [respuestaDash, respuestaFugas] = await Promise.all([
-          axios.get(url, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/alertas-fugas`, { headers: { Authorization: `Bearer ${token}` } })
-        ]);
-
-        setDatos(respuestaDash.data);
-        setFugas(respuestaFugas.data);
-      } catch (error) {
-        console.error('Error cargando métricas de auditoría', error);
-        toastError('Falla al conectar con la bóveda contable.');
-      } finally {
-        setTimeout(() => setCargando(false), 300);
-      }
-    };
-
     cargarDatos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diasFiltro]);
+
+  const sincronizarMes = async () => {
+    setSincronizando(true);
+    try {
+      const token = localStorage.getItem('tokenCuadraPro');
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/conciliaciones/seed-mes`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      success('Datos financieros del mes actual generados y sincronizados.');
+      await cargarDatos();
+    } catch (err) {
+      console.error(err);
+      toastError('Error al sincronizar datos del mes.');
+    } finally {
+      setSincronizando(false);
+    }
+  };
 
   const exportarExcel = () => {
     if (!datos) return;
@@ -374,6 +392,19 @@ export default function Dashboard() {
             )}
           </div>
 
+          {/* Botón Sincronizar Datos del Mes Actual */}
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={sincronizarMes} 
+            disabled={sincronizando}
+            className="flex items-center gap-2 px-4 py-2.5 bg-b2bHighlight/10 border border-b2bHighlight/20 hover:bg-b2bHighlight/20 text-b2bHighlight rounded-xl text-xs font-bold transition-all shadow-premium-sm dark:shadow-none disabled:opacity-50"
+            title="Sembrar y sincronizar métricas del mes en curso"
+          >
+            <RefreshCw size={13} className={sincronizando ? 'animate-spin' : ''} /> 
+            {sincronizando ? 'Sincronizando...' : 'Generar Datos del Mes'}
+          </motion.button>
+
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -476,7 +507,7 @@ export default function Dashboard() {
 
             <div className="h-72 w-full">
               <ResponsiveContainer>
-                <BarChart data={datos?.datosSemanales} margin={{ top: 10, right: 0, left: -22, bottom: 0 }}>
+                <BarChart data={datos?.datosSemanales} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorFirmaGlow" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#00C49F" stopOpacity={0.4}/>
@@ -484,20 +515,27 @@ export default function Dashboard() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#888888" strokeOpacity={0.1} />
-                  <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 10}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 10}} />
+                  <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 11, fontWeight: 600}} dy={10} />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#8a94a6', fontSize: 10}} 
+                    tickFormatter={(v) => v >= 1000 ? `$${(v/1000).toFixed(0)}k` : `$${v}`}
+                  />
                   <Tooltip 
                     cursor={{fill: 'currentColor', className: 'text-neutral-100/30 dark:text-neutral-800/10', opacity: 0.3}} 
+                    formatter={(value) => [`$${Number(value).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN`]}
                     contentStyle={{
-                      backgroundColor: 'rgba(var(--bg-tooltip, 21, 25, 34), 0.95)',
+                      backgroundColor: 'rgba(21, 25, 34, 0.95)',
                       borderRadius: '16px',
-                      border: '1px solid rgba(var(--border-tooltip, 45, 55, 72), 0.2)',
+                      border: '1px solid rgba(45, 55, 72, 0.4)',
                       color: '#fff',
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                      fontSize: '12px'
                     }}
                   />
-                  <Bar dataKey="esperado" fill="#00C49F" radius={[4, 4, 0, 0]} name="Ingresos" barSize={22} />
-                  <Bar dataKey="depositado" fill="url(#colorFirmaGlow)" opacity={0.25} radius={[4, 4, 0, 0]} name="Gastos" barSize={22} />
+                  <Bar dataKey="esperado" fill="#00C49F" radius={[6, 6, 0, 0]} name="Ingresos" barSize={26} />
+                  <Bar dataKey="depositado" fill="#3b82f6" opacity={0.8} radius={[6, 6, 0, 0]} name="Depositado" barSize={26} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -651,16 +689,24 @@ export default function Dashboard() {
         {/* Columna Derecha (1/3) */}
         <div className="space-y-6">
           
-          {/* Cash Flow Forecast (Histograma pequeño) */}
+          {/* Cash Flow Forecast (Histograma) */}
           <motion.div 
             variants={itemVariants}
             className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none"
           >
-            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-4 font-title">Flujo de Efectivo</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-title">Flujo de Efectivo</h3>
+              <span className="text-[10px] font-bold text-[#00C49F] bg-[#00C49F]/10 px-2 py-0.5 rounded-md">Semanal</span>
+            </div>
             <div className="h-32 w-full">
               <ResponsiveContainer>
-                <BarChart data={datos?.datosSemanales} margin={{ top: 5, right: 0, left: -32, bottom: 0 }}>
-                  <Bar dataKey="depositado" fill="#00C49F" opacity={0.85} radius={[3, 3, 0, 0]} barSize={8} />
+                <BarChart data={datos?.datosSemanales} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
+                  <XAxis dataKey="dia" axisLine={false} tickLine={false} tick={{fill: '#8a94a6', fontSize: 9}} dy={4} />
+                  <Tooltip 
+                    formatter={(v) => [`$${Number(v).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 'Depositado']}
+                    contentStyle={{ backgroundColor: '#151922', borderRadius: '12px', border: '1px solid #2d3748', color: '#fff', fontSize: '11px' }} 
+                  />
+                  <Bar dataKey="depositado" fill="#00C49F" opacity={0.85} radius={[3, 3, 0, 0]} barSize={16} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -671,28 +717,30 @@ export default function Dashboard() {
             variants={itemVariants}
             className="bg-white dark:bg-[#151922]/50 p-6 rounded-[28px] border border-neutral-200/60 dark:border-neutral-800/80 shadow-premium-sm dark:shadow-none flex flex-col justify-between"
           >
-            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-6 font-title">Desglose de Gastos</h3>
+            <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-4 font-title">Desglose de Deducciones</h3>
             <div className="relative min-h-[180px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height={180}>
                 <PieChart>
                   <Pie 
                     data={datos?.datosDeducciones} 
-                    innerRadius={58} 
+                    innerRadius={55} 
                     outerRadius={75} 
                     paddingAngle={4} 
                     dataKey="valor" 
                     stroke="none"
                   >
                     {datos?.datosDeducciones.map((e, i) => (
-                      <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} className="hover:opacity-90 transition-opacity duration-300 outline-none" />
+                      <Cell key={i} fill={['#00C49F', '#3b82f6', '#f43f5e', '#f59e0b'][i % 4]} className="hover:opacity-90 transition-opacity duration-300 outline-none" />
                     ))}
                   </Pie>
                   <Tooltip 
+                    formatter={(v) => [`$${Number(v).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`]}
                     contentStyle={{
-                      backgroundColor: 'rgba(var(--bg-tooltip, 21, 25, 34), 0.95)',
+                      backgroundColor: 'rgba(21, 25, 34, 0.95)',
                       borderRadius: '12px', 
-                      border: '1px solid rgba(var(--border-tooltip, 45, 55, 72), 0.2)',
-                      color: '#fff'
+                      border: '1px solid rgba(45, 55, 72, 0.3)',
+                      color: '#fff',
+                      fontSize: '11px'
                     }} 
                   />
                 </PieChart>
@@ -701,6 +749,19 @@ export default function Dashboard() {
                 <span className="text-[8px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Deducciones</span>
                 <span className="text-lg font-black text-neutral-900 dark:text-white font-mono">${fugaDeduccionesVal.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
               </div>
+            </div>
+            
+            {/* Leyenda de Deducciones */}
+            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800/60 text-[10px]">
+              {(datos?.datosDeducciones || []).map((d, i) => (
+                <div key={i} className="flex flex-col items-center text-center">
+                  <div className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ['#00C49F', '#3b82f6', '#f43f5e', '#f59e0b'][i % 4] }}></span>
+                    <span className="text-neutral-400 font-semibold truncate">{d.nombre}</span>
+                  </div>
+                  <span className="font-mono font-bold text-neutral-800 dark:text-white mt-0.5">${Number(d.valor).toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+                </div>
+              ))}
             </div>
           </motion.div>
 
